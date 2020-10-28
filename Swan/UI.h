@@ -27,6 +27,7 @@ public:
         }
        return instance;
    }
+
     UI(UI const&) = delete;
     void operator=(UI const&) = delete;
     
@@ -45,6 +46,9 @@ public:
         vEngine->listener = this;
         vEngine->init("/Users/mdietric/Swan2/engines/stockfish");
         set.whiteToMove = true;
+        
+        timeWMsec = 3000;
+        timeBMsec = 3000;
     }
     
     void close(){
@@ -82,11 +86,16 @@ private:
     bool fromSelectedConfirmed;
     bool toSelected;
     
+    int timeWMsec;
+    int timeBMsec;
+    
     Set set;
     EEntryState entryState = ES_NONE;
     
     VEngine * vEngine;
     TBoard * board;
+    bool runClock = false;
+    
 };
 
 #endif /* UI_hpp */

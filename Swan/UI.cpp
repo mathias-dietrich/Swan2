@@ -81,6 +81,7 @@ void UI::mouseDown(int pos){
                 clearToFields();
             }
             break;
+            
         case ES_TODOWN:
             for(int i=0;i<64;i++){
                 if(pos == set.toFields[i]){
@@ -92,10 +93,51 @@ void UI::mouseDown(int pos){
                     EPiece p = board->squares[from];
                     board->squares[pos] = p;
                     board->squares[from] = EMPTY;
+                    
+                    // Castling
+                    Square f = (Square)from;
+                    Square t = (Square)pos;
+                    bool wCastlingS = board->castelingRights & 1;
+                    bool wCastlingL = board->castelingRights & 2;
+                    bool bCastlingS = board->castelingRights & 4;
+                    bool bCastlingL = board->castelingRights & 8;
+                    if( p == W_KING && f == SQ_E1 && t == SQ_G1){
+                        board->squares[SQ_H1] = EMPTY;
+                        board->squares[SQ_F1] = W_ROOK;
+                        wCastlingS = false;
+                        wCastlingL = false;
+                    }
+                    if( p == W_KING && f == SQ_E1 && t == SQ_C1){
+                        board->squares[SQ_A1] = EMPTY;
+                        board->squares[SQ_D1] = W_ROOK;
+                        wCastlingL = false;
+                        wCastlingS = false;
+                    }
+                    if( p == B_KING && f == SQ_E8 && t == SQ_G8){
+                        board->squares[SQ_H8] = EMPTY;
+                        board->squares[SQ_F8] = B_ROOK;
+                        bCastlingS = false;
+                        bCastlingL = false;
+                    }
+                    if( p == B_KING && f == SQ_E8 && t == SQ_G8){
+                        board->squares[SQ_A8] = EMPTY;
+                        board->squares[SQ_D8] = B_ROOK;
+                        bCastlingL = false;
+                        bCastlingS = false;
+                    }
+                    board->castelingRights = 0;
+                    if(wCastlingS)board->castelingRights += 1;
+                    if(wCastlingL)board->castelingRights += 2;
+                    if(bCastlingS)board->castelingRights += 4;
+                    if(bCastlingL)board->castelingRights += 8;
                     for(int i=0; i < 64; i++){
                         set.s[i] = board->squares[i];
                     }
                     flipColor();
+                    if(board->sideToMove == WHITE){
+                        board->halfmove++;
+                    }
+                    set.fen = board->getFen(board);
                     return;
                 }
             }
@@ -103,9 +145,10 @@ void UI::mouseDown(int pos){
             clearToFields();
             set.fromField = -1;
             break;
-        case ES_TOUP:
             
+        case ES_TOUP:
             break;
+            
         case ES_NONE:
             if(set.s[pos] == EMPTY){
                 return;
@@ -124,6 +167,32 @@ void UI::mouseDown(int pos){
 }
 
 Set UI::getSet(){
+    if(runClock){
+        if(board->sideToMove == WHITE){
+            timeWMsec--;
+        }else{
+            timeBMsec--;
+        }
+    }
+    int secWall = timeWMsec/10;
+    int secBall = timeBMsec/10;
+    
+    int minW = secWall / 60;
+    int secW = secWall - minW * 60;
+    int minB = secBall / 60;
+    int secB = secBall - minB * 60;
+    string secWs = to_string(secW);
+    string secBs = to_string(secB);
+    
+    if(secWs.length() == 1){
+        secWs = "0" + secWs;
+    }
+    if(secBs.length() == 1){
+        secBs = "0" + secBs;
+    }
+    
+    set.timeW = to_string(minW)  + ":" + secWs;
+    set.timeB = to_string(minB)  + ":" + secBs;
     return set;
 }
 
@@ -200,9 +269,11 @@ void UI::exec(ECmd cmd, string s, int p){
         case CMD_LOADPNG:
             
             break;
-        case CMD_START:
             
+        case CMD_START:
+            runClock = true;
             break;
+            
         case CMD_SETBOARD:
             
             break;
@@ -228,6 +299,7 @@ void UI::exec(ECmd cmd, string s, int p){
             
             break;
         case CMD_FINDMOVES:
+            runClock = true;
             vEngine->getLegalMoves(s);
             break;
     }

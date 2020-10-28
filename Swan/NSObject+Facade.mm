@@ -10,8 +10,6 @@
 
 @implementation Facade
 
-
-
 -(void) setup{
     UI::of()->setup();
 }

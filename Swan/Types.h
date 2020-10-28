@@ -72,22 +72,8 @@ inline File getFile(char x){
     return (File)(int) (x - 97);
 }
 
-enum EngineState {
-  GETLEGAL, FINDMOVE, USERFROM, USERTO, MATE, PAT, RESIGN, STOPPED
-};
-
-struct Set{
-    int s[64];
-    int fromField;
-    int toFields[64];
-    int timeWMsec;
-    int timeBMsec;
-    bool whiteToMove;
-    
-};
 // Piece Identifiers
 enum EPiece {EMPTY,W_PAWN,W_KNIGHT,W_BISHOP,W_ROOK,W_QUEEN,W_KING, B_PAWN,B_KNIGHT,B_BISHOP,B_ROOK,B_QUEEN,B_KING,INVALID};
-
 
 enum ECmd{CMD_TOP, CMD_BACK, CMD_FORWARD, CMD_STOP, CMD_END, CMD_ANALYZE, CMD_HINT, CMD_SAVEPNG, CMD_LOADPNG, CMD_START, CMD_SETBOARD, CMD_RESETBOARD,CMD_CLEARBOARD, CMD_SETTINGS,CMD_SETENGINEW,CMD_SETENGINEB, CMD_RESIGN,CMD_SETFEN, CMD_FINDMOVES};
 
@@ -95,13 +81,25 @@ enum EEntryState{ES_FROMDOWN, ES_FROMUP, ES_TODOWN, ES_TOUP, ES_NONE};
 
 enum EReply{ES_MOVESAVAILABLE};
 
+enum GameState {GAME_NONE, GAME_RUNNING, GAME_MATE, GAME_PAT, GAME_RESIGNED};
+
+struct Set{
+    int s[64];
+    int fromField;
+    int toFields[64];
+    string timeW = "3:34";
+    string timeB = "5:00";
+    bool whiteToMove;
+    string fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1";
+    GameState gameState;
+};
+
 inline string posFromInt(int pos){
     int rank = pos / 8 + 1;
     int file = pos % 8;
     char c = (char)file +97;
     return c +  to_string(rank);
 }
-
 
 struct Ply{
     int from;

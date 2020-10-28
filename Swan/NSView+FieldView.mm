@@ -49,6 +49,13 @@
 
 // Main refresh timer
 - (void)_timerFired:(NSTimer *)timer {
+    set = [facade getSet];
+    [fenField setStringValue: [NSString stringWithCString:set.fen.c_str() encoding:[NSString defaultCStringEncoding]]];
+    [timeW setStringValue: [NSString stringWithCString:set.timeW.c_str() encoding:[NSString defaultCStringEncoding]]];
+    [timeB setStringValue: [NSString stringWithCString:set.timeB.c_str() encoding:[NSString defaultCStringEncoding]]];
+    
+    NSColor * c =  set.whiteToMove ? NSColor.whiteColor : NSColor.blackColor;
+    [colorWell setColor:c];
     [self setNeedsDisplay:YES];
 }
 
@@ -84,8 +91,6 @@
         isInit = true;
        [self initalize];
     }
-    
-    Set set = [facade getSet];
     
     // Fields
     bool flip = true;

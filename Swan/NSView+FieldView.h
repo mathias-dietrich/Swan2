@@ -14,6 +14,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FieldView : NSView{
+    
+    IBOutlet  NSTextField * fenField;
+    IBOutlet  NSTextField * timeW;
+    IBOutlet  NSTextField * timeB;
+    IBOutlet  NSColorWell * colorWell;
+    
     NSTimer * _timer;
     NSImage *wBishop;
     NSImage *wRook;
@@ -37,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSDictionary *attributesSmall;
     
     Facade * facade;
+    
+    Set set;
 }
 
 - (void)flip;

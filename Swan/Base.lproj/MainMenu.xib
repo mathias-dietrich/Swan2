@@ -735,9 +735,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setBoard:" target="EiT-Mj-1SZ" id="YfX-mj-aXU"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2n6-qM-Iwj">
                         <rect key="frame" x="1111" y="747" width="102" height="32"/>
@@ -746,9 +743,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="clearBoard:" target="EiT-Mj-1SZ" id="58O-Tf-mHS"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d4t-Sb-1VP">
                         <rect key="frame" x="1326" y="692" width="102" height="32"/>
@@ -757,9 +751,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="settings:" target="EiT-Mj-1SZ" id="OI2-48-BPg"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dLJ-0E-myU">
                         <rect key="frame" x="177" y="811" width="70" height="32"/>
@@ -801,9 +792,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setFen:" target="EiT-Mj-1SZ" id="N5b-In-IAw"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8d7-he-UvE">
                         <rect key="frame" x="820" y="608" width="89" height="32"/>
@@ -812,9 +800,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="showPGN:" target="EiT-Mj-1SZ" id="avh-Tw-lHV"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G3q-FK-hGd">
                         <rect key="frame" x="908" y="608" width="89" height="32"/>
@@ -823,9 +808,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="showDb:" target="EiT-Mj-1SZ" id="wjg-Nd-bqJ"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CST-F1-KmD">
                         <rect key="frame" x="1339" y="608" width="89" height="32"/>
@@ -834,9 +816,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="clearDebug:" target="EiT-Mj-1SZ" id="7ke-7y-MDP"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gpz-fL-1Wb">
                         <rect key="frame" x="995" y="608" width="90" height="32"/>
@@ -845,9 +824,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="showAnalytics:" target="EiT-Mj-1SZ" id="gOs-oX-QUl"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VMr-0e-qeE">
                         <rect key="frame" x="1265" y="608" width="80" height="32"/>
@@ -856,20 +832,15 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="showDebug:" target="EiT-Mj-1SZ" id="w7W-HL-XgK"/>
-                        </connections>
                     </button>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cw2-iK-hfv" customClass="FieldView">
                         <rect key="frame" x="12" y="10" width="800" height="800"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <connections>
-                            <outlet property="cToMove" destination="VqZ-UR-ffS" id="Ufm-OC-st5"/>
-                            <outlet property="drpEngine0" destination="1sG-nB-Kfw" id="i9f-EX-7mK"/>
-                            <outlet property="drpEngine1" destination="zj7-I8-01r" id="uxd-lc-iIU"/>
-                            <outlet property="mainView" destination="EiT-Mj-1SZ" id="ibN-NQ-1nP"/>
-                            <outlet property="timeB" destination="PXC-kC-OOT" id="CPY-vt-zsf"/>
-                            <outlet property="timeW" destination="fAm-uP-r4c" id="Oha-e9-zua"/>
+                            <outlet property="colorWell" destination="VqZ-UR-ffS" id="M1i-v4-jEb"/>
+                            <outlet property="fenField" destination="yd0-rm-da6" id="hsn-Aa-g6i"/>
+                            <outlet property="timeB" destination="PXC-kC-OOT" id="wXq-hh-kbg"/>
+                            <outlet property="timeW" destination="fAm-uP-r4c" id="Tsd-ts-47n"/>
                         </connections>
                     </customView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9a5-IQ-24A">
@@ -942,9 +913,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setKnightW:" target="EiT-Mj-1SZ" id="cfj-Ql-f9B"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MzF-jj-HEO">
                         <rect key="frame" x="1392" y="813" width="30" height="30"/>
@@ -953,9 +921,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setPawnW:" target="EiT-Mj-1SZ" id="Y3l-s7-yoK"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0pc-DL-htT">
                         <rect key="frame" x="1325" y="813" width="30" height="30"/>
@@ -964,9 +929,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setBishopW:" target="EiT-Mj-1SZ" id="5VK-sC-5KP"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="njg-Xw-NPP">
                         <rect key="frame" x="1290" y="813" width="30" height="30"/>
@@ -975,9 +937,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setRookpW:" target="EiT-Mj-1SZ" id="ymv-dD-Ung"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x0M-b3-ekb">
                         <rect key="frame" x="1256" y="813" width="30" height="30"/>
@@ -986,9 +945,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setQueenW:" target="EiT-Mj-1SZ" id="2vE-TV-gtp"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="arl-cB-KeH">
                         <rect key="frame" x="1220" y="813" width="30" height="30"/>
@@ -997,9 +953,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setKingW:" target="EiT-Mj-1SZ" id="h3h-TQ-KX7"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Phj-4g-b1I">
                         <rect key="frame" x="1360" y="778" width="30" height="30"/>
@@ -1008,9 +961,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setKnightB:" target="EiT-Mj-1SZ" id="B8N-1I-1h7"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Akt-03-Yn7">
                         <rect key="frame" x="1392" y="778" width="30" height="30"/>
@@ -1019,9 +969,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setPawnB:" target="EiT-Mj-1SZ" id="YoA-pf-td1"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s2N-Wv-DM0">
                         <rect key="frame" x="1325" y="778" width="30" height="30"/>
@@ -1030,9 +977,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setBishopB:" target="EiT-Mj-1SZ" id="OTr-Nu-mXj"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hzn-Yk-mps">
                         <rect key="frame" x="1290" y="778" width="30" height="30"/>
@@ -1041,9 +985,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setRookpB:" target="EiT-Mj-1SZ" id="56M-gR-3vh"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zxo-hc-JU8">
                         <rect key="frame" x="1256" y="778" width="30" height="30"/>
@@ -1052,9 +993,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setQueenB:" target="EiT-Mj-1SZ" id="rO2-Pp-eyd"/>
-                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NR9-YX-ySf">
                         <rect key="frame" x="1220" y="778" width="30" height="30"/>
@@ -1063,9 +1001,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="setKingB:" target="EiT-Mj-1SZ" id="aVQ-X6-dNR"/>
-                        </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXC-kC-OOT">
                         <rect key="frame" x="967" y="774" width="125" height="46"/>
@@ -1233,9 +1168,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="resetBoard:" target="EiT-Mj-1SZ" id="icm-Ny-9RR"/>
-                        </connections>
                     </button>
                     <scrollView fixedFrame="YES" borderType="line" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rJF-6l-Jw0">
                         <rect key="frame" x="823" y="51" width="599" height="554"/>
@@ -1282,35 +1214,6 @@
                         </scroller>
                     </scrollView>
                 </subviews>
-                <connections>
-                    <outlet property="btnAnanlyse" destination="Gpz-fL-1Wb" id="Rvx-sW-YRw"/>
-                    <outlet property="btnBishopB" destination="s2N-Wv-DM0" id="6py-56-gJM"/>
-                    <outlet property="btnBishopW" destination="0pc-DL-htT" id="dcf-im-NGU"/>
-                    <outlet property="btnClear" destination="CST-F1-KmD" id="QH0-rS-AZK"/>
-                    <outlet property="btnClearBoard" destination="2n6-qM-Iwj" id="V8M-kD-euR"/>
-                    <outlet property="btnDb" destination="G3q-FK-hGd" id="L39-73-2zg"/>
-                    <outlet property="btnDebug" destination="VMr-0e-qeE" id="Abv-Dm-NWe"/>
-                    <outlet property="btnKingB" destination="NR9-YX-ySf" id="adF-If-wys"/>
-                    <outlet property="btnKingW" destination="arl-cB-KeH" id="sS9-Fo-mfx"/>
-                    <outlet property="btnKnightB" destination="Phj-4g-b1I" id="YcC-VB-Kdf"/>
-                    <outlet property="btnKnightW" destination="PTO-lc-7j2" id="L5Z-KP-sSk"/>
-                    <outlet property="btnPGN" destination="8d7-he-UvE" id="R3r-X4-9d8"/>
-                    <outlet property="btnPawnB" destination="Akt-03-Yn7" id="VSE-uz-G5g"/>
-                    <outlet property="btnPawnW" destination="MzF-jj-HEO" id="c9V-cF-hCS"/>
-                    <outlet property="btnQueenB" destination="zxo-hc-JU8" id="4k7-ZF-b0G"/>
-                    <outlet property="btnQueenW" destination="x0M-b3-ekb" id="WgY-Bl-bEw"/>
-                    <outlet property="btnResetBoard" destination="SJG-gK-pAO" id="tR3-7X-yaD"/>
-                    <outlet property="btnResign" destination="04n-op-jlI" id="F7M-aB-Qqe"/>
-                    <outlet property="btnRookB" destination="Hzn-Yk-mps" id="t5l-p5-xWt"/>
-                    <outlet property="btnRookW" destination="njg-Xw-NPP" id="b1f-Jc-FjF"/>
-                    <outlet property="btnSetBoard" destination="QZu-zX-0gk" id="fUI-mo-3WZ"/>
-                    <outlet property="btnSetFen" destination="Egc-dO-R4m" id="re4-sj-Q3e"/>
-                    <outlet property="btnSettings" destination="d4t-Sb-1VP" id="0DH-fh-9tg"/>
-                    <outlet property="fenField" destination="yd0-rm-da6" id="Kh6-Qi-XrB"/>
-                    <outlet property="gameField" destination="8SG-UE-MO6" id="aSB-AH-CMG"/>
-                    <outlet property="timeB" destination="PXC-kC-OOT" id="b09-U3-5DS"/>
-                    <outlet property="timeW" destination="fAm-uP-r4c" id="0t4-Rg-ujH"/>
-                </connections>
             </view>
             <point key="canvasLocation" x="227" y="228"/>
         </window>

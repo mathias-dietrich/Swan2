@@ -325,9 +325,9 @@ public:
         if(enPasse != "-"){
             enPassentSquare = (Square)std::stoi(enPasse);
         }
-       
-        string halfMove = strList[4];
-        string fullMove = strList[5];
+
+        rule50 = stoi(strList[4]);
+        halfmove = stoi(strList[5]);
         return 0;
     }
         

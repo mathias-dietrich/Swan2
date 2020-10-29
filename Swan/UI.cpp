@@ -20,6 +20,47 @@ void UI::listen(EReply c, string s){
     size_t pos = 0;
     std::string token;
     switch(c){
+        case ES_MATE:
+        {
+            bool haveMoves = false;
+            while ((pos = s.find(delimiter)) != std::string::npos) {
+                token = s.substr(0, pos);
+                if(token.length() > 3){
+                    haveMoves = true;
+                    break;
+                }
+                s.erase(0, pos + delimiter.length());
+            }
+            if(haveMoves){
+                if(isCheck){
+                    // Check if Mate;
+                    ply.strDisplay += "+";
+                }
+                set.fen = board->getFen(board);
+                game.plies.push_back(ply);
+                return;
+            }
+            
+            // no moves
+            runClock = false;
+            if(isCheck){
+                ply.strDisplay += "++";
+                set.fen = board->getFen(board);
+                game.plies.push_back(ply);
+                if(board->sideToMove == BLACK){
+                    game.result = "1-0";
+                    game.gameState = GAME_MATE;
+                }else{
+                    game.result = "0-1";
+                    game.gameState = GAME_MATE;
+                }
+                return;
+            }
+            game.result = "1/2-1/2";
+            game.gameState = GAME_PAT;
+            break;
+        }
+            
         case ES_MOVESAVAILABLE:
             while ((pos = s.find(delimiter)) != std::string::npos) {
                 token = s.substr(0, pos);
@@ -33,7 +74,7 @@ void UI::listen(EReply c, string s){
             break;
             
         case ES_CHECK:
-            bool isCheck = false;
+            isCheck = false;
             int kingPos = -1;
             if(board->sideToMove==BLACK){
                 for(int i =0;i<64;i++){
@@ -59,17 +100,14 @@ void UI::listen(EReply c, string s){
                 }
                 s.erase(0, pos + delimiter.length());
             }
-            if(isCheck){
-                // Check if Mate;
-                ply.strDisplay += "+";
-            }
             
             flipColor();
             if(board->sideToMove == WHITE){
                 board->halfmove++;
             }
-            set.fen = board->getFen(board);
-            game.plies.push_back(ply);
+            
+           
+            vEngine->getLegalMoves(board->getFen(board),ES_MATE);
             break;
     }
 }
@@ -217,6 +255,8 @@ void UI::mouseDown(int pos){
 }
 
 Set UI::getSet(){
+    
+    // Clock  -----------------------------------
     if(runClock){
         if(board->sideToMove == WHITE){
             timeWMsec--;
@@ -226,7 +266,6 @@ Set UI::getSet(){
     }
     int secWall = timeWMsec/10;
     int secBall = timeBMsec/10;
-    
     int minW = secWall / 60;
     int secW = secWall - minW * 60;
     int minB = secBall / 60;
@@ -240,9 +279,20 @@ Set UI::getSet(){
     if(secBs.length() == 1){
         secBs = "0" + secBs;
     }
-    
     set.timeW = to_string(minW)  + ":" + secWs;
     set.timeB = to_string(minB)  + ":" + secBs;
+    // End Clock -----------------------------------
+    
+    if(timeWMsec<=0){
+        runClock = false;
+        game.result = "0-1";
+        game.gameState = GAME_TIMEOUT;
+    }
+    if(timeBMsec<=0){
+        runClock = false;
+        game.result = "1-0";
+        game.gameState = GAME_TIMEOUT;
+    }
     set.pngDescription = game.getDescription();
     return set;
 }
@@ -289,6 +339,8 @@ void UI::newGame(){
     set.s[61] = B_BISHOP;
     set.s[62] = B_KNIGHT;
     set.s[63] = B_ROOK;
+    game.gameState = GAME_NONE;
+    game.plies.clear();
 }
 
 void UI::exec(ECmd cmd, string s, int p){

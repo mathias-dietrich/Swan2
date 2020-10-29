@@ -104,6 +104,7 @@ private:
     bool runClock = false;
     Game game;
     Ply ply;
+    bool isCheck;
 };
 
 #endif /* UI_hpp */

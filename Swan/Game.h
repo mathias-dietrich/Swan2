@@ -15,6 +15,7 @@
 
 class Game{
 public:
+    GameState gameState;
     string event = "[Event New Match]";
     string site = "[Site Mat at home]";
     string date = "[Date " + CurrentDate() + " ]";

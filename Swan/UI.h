@@ -15,7 +15,9 @@
 #include "Listener.h"
 
 #include "VEngine.h"
+#include "EngineWrapper.h"
 #include "Board.h"
+#import "Game.h"
 
 using namespace std;
 
@@ -47,13 +49,17 @@ public:
         vEngine->init("/Users/mdietric/Swan2/engines/stockfish");
         set.whiteToMove = true;
         
+        engineWrapper = new EngineWrapper();
+        
         timeWMsec = 3000;
         timeBMsec = 3000;
     }
     
     void close(){
         vEngine->close();
+        engineWrapper->close();
         delete vEngine;
+        delete engineWrapper;
         delete board;
     }
     
@@ -93,9 +99,11 @@ private:
     EEntryState entryState = ES_NONE;
     
     VEngine * vEngine;
+    EngineWrapper * engineWrapper;
     TBoard * board;
     bool runClock = false;
-    
+    Game game;
+    Ply ply;
 };
 
 #endif /* UI_hpp */

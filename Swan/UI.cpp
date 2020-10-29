@@ -16,12 +16,11 @@ void UI::listen(EReply c, int params[]){
 }
 
 void UI::listen(EReply c, string s){
+    std::string delimiter = ",";
+    size_t pos = 0;
+    std::string token;
     switch(c){
         case ES_MOVESAVAILABLE:
-            cout << s << endl;
-            std::string delimiter = ",";
-            size_t pos = 0;
-            std::string token;
             while ((pos = s.find(delimiter)) != std::string::npos) {
                 token = s.substr(0, pos);
                 std::cout << token << std::endl;
@@ -31,6 +30,46 @@ void UI::listen(EReply c, string s){
                 }
                 s.erase(0, pos + delimiter.length());
             }
+            break;
+            
+        case ES_CHECK:
+            bool isCheck = false;
+            int kingPos = -1;
+            if(board->sideToMove==BLACK){
+                for(int i =0;i<64;i++){
+                    if(W_KING == board->squares[i]){
+                        kingPos = i;
+                        break;
+                    }
+                }
+            }else{
+                for(int i =0;i<64;i++){
+                    if(B_KING == board->squares[i]){
+                        kingPos = i;
+                        break;
+                    }
+                }
+            }
+            while ((pos = s.find(delimiter)) != std::string::npos) {
+                token = s.substr(0, pos);
+                if(token.length() > 3){
+                    if(kingPos == getPosFromStr(token.substr(2, 2))){
+                        isCheck = true;
+                    }
+                }
+                s.erase(0, pos + delimiter.length());
+            }
+            if(isCheck){
+                // Check if Mate;
+                ply.strDisplay += "+";
+            }
+            
+            flipColor();
+            if(board->sideToMove == WHITE){
+                board->halfmove++;
+            }
+            set.fen = board->getFen(board);
+            game.plies.push_back(ply);
             break;
     }
 }
@@ -101,43 +140,54 @@ void UI::mouseDown(int pos){
                     bool wCastlingL = board->castelingRights & 2;
                     bool bCastlingS = board->castelingRights & 4;
                     bool bCastlingL = board->castelingRights & 8;
+                    
+                    ply.from = from;
+                    ply.to = pos;
+                    ply.str = posFromInt(from)+posFromInt(pos);
+                    ply.strDisplay =  board->getPGNCode(p) + posFromInt(from)+posFromInt(pos);
+                    
                     if( p == W_KING && f == SQ_E1 && t == SQ_G1){
                         board->squares[SQ_H1] = EMPTY;
                         board->squares[SQ_F1] = W_ROOK;
                         wCastlingS = false;
                         wCastlingL = false;
+                        ply.strDisplay = "o-o";
                     }
                     if( p == W_KING && f == SQ_E1 && t == SQ_C1){
                         board->squares[SQ_A1] = EMPTY;
                         board->squares[SQ_D1] = W_ROOK;
                         wCastlingL = false;
                         wCastlingS = false;
+                        ply.strDisplay = "o-o-o";
                     }
                     if( p == B_KING && f == SQ_E8 && t == SQ_G8){
                         board->squares[SQ_H8] = EMPTY;
                         board->squares[SQ_F8] = B_ROOK;
                         bCastlingS = false;
                         bCastlingL = false;
+                        ply.strDisplay = "o-o";
                     }
                     if( p == B_KING && f == SQ_E8 && t == SQ_G8){
                         board->squares[SQ_A8] = EMPTY;
                         board->squares[SQ_D8] = B_ROOK;
                         bCastlingL = false;
                         bCastlingS = false;
+                        ply.strDisplay = "o-o-o";
                     }
                     board->castelingRights = 0;
                     if(wCastlingS)board->castelingRights += 1;
                     if(wCastlingL)board->castelingRights += 2;
                     if(bCastlingS)board->castelingRights += 4;
                     if(bCastlingL)board->castelingRights += 8;
+                    
+                    // copy
                     for(int i=0; i < 64; i++){
                         set.s[i] = board->squares[i];
                     }
-                    flipColor();
-                    if(board->sideToMove == WHITE){
-                        board->halfmove++;
-                    }
-                    set.fen = board->getFen(board);
+                    
+                    // Check if King in check;
+                    vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+
                     return;
                 }
             }
@@ -193,6 +243,7 @@ Set UI::getSet(){
     
     set.timeW = to_string(minW)  + ":" + secWs;
     set.timeB = to_string(minB)  + ":" + secBs;
+    set.pngDescription = game.getDescription();
     return set;
 }
 
@@ -300,7 +351,7 @@ void UI::exec(ECmd cmd, string s, int p){
             break;
         case CMD_FINDMOVES:
             runClock = true;
-            vEngine->getLegalMoves(s);
+            vEngine->getLegalMoves(s,ES_MOVESAVAILABLE);
             break;
     }
 }

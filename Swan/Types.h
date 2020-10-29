@@ -79,7 +79,7 @@ enum ECmd{CMD_TOP, CMD_BACK, CMD_FORWARD, CMD_STOP, CMD_END, CMD_ANALYZE, CMD_HI
 
 enum EEntryState{ES_FROMDOWN, ES_FROMUP, ES_TODOWN, ES_TOUP, ES_NONE};
 
-enum EReply{ES_MOVESAVAILABLE};
+enum EReply{ES_MOVESAVAILABLE, ES_CHECK, ES_MATE,ES_ENGINE0, ES_ENGINE1};
 
 enum GameState {GAME_NONE, GAME_RUNNING, GAME_MATE, GAME_PAT, GAME_RESIGNED};
 
@@ -92,6 +92,7 @@ struct Set{
     bool whiteToMove;
     string fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1";
     GameState gameState;
+    string pngDescription;
 };
 
 inline string posFromInt(int pos){

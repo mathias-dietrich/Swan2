@@ -56,6 +56,8 @@
     
     NSColor * c =  set.whiteToMove ? NSColor.whiteColor : NSColor.blackColor;
     [colorWell setColor:c];
+    [pngView setString: [NSString stringWithCString:set.pngDescription.c_str() encoding:[NSString defaultCStringEncoding]]];
+    
     [self setNeedsDisplay:YES];
 }
 

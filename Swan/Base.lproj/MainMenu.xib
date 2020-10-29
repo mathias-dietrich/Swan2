@@ -839,6 +839,7 @@
                         <connections>
                             <outlet property="colorWell" destination="VqZ-UR-ffS" id="M1i-v4-jEb"/>
                             <outlet property="fenField" destination="yd0-rm-da6" id="hsn-Aa-g6i"/>
+                            <outlet property="pngView" destination="8SG-UE-MO6" id="Q8b-CP-wDD"/>
                             <outlet property="timeB" destination="PXC-kC-OOT" id="wXq-hh-kbg"/>
                             <outlet property="timeW" destination="fAm-uP-r4c" id="Tsd-ts-47n"/>
                         </connections>

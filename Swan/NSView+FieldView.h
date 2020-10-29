@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
     IBOutlet  NSTextField * timeB;
     IBOutlet  NSColorWell * colorWell;
     
+    IBOutlet  NSTextView * pngView;
+    
     NSTimer * _timer;
     NSImage *wBishop;
     NSImage *wRook;

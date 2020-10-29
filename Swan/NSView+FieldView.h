@@ -13,7 +13,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FieldView : NSView{
+@interface FieldView : NSView <NSComboBoxDelegate>{
+    
+    IBOutlet NSComboBox * drpEngine0;
+    IBOutlet NSComboBox * drpEngine1;
+    IBOutlet NSComboBox * drpGame;
+    
+    IBOutlet NSButton * btnKingW;
+    IBOutlet NSButton * btnQueenW;
+    IBOutlet NSButton * btnRookW;
+    IBOutlet NSButton * btnBishopW;
+    IBOutlet NSButton * btnKnightW;
+    IBOutlet NSButton * btnPawnW;
+    
+    IBOutlet NSButton * btnKingB;
+    IBOutlet NSButton * btnQueenB;
+    IBOutlet NSButton * btnRookB;
+    IBOutlet NSButton * btnBishopB;
+    IBOutlet NSButton * btnKnightB;
+    IBOutlet NSButton * btnPawnB;
     
     IBOutlet  NSTextField * fenField;
     IBOutlet  NSTextField * timeW;
@@ -55,6 +73,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)drawRect:(NSRect)dirtyRect;
 - (void) exec:(ECmd) cmd param:(NSString *) p;
 
+- (void)disablePieceSelection;
+- (void)enablePieceSelection;
+- (void)enableWhitePromotion;
+- (void)enableBlackPromotion;
+
+- (void)comboBoxSelectionDidChange:(NSNotification *)notification;
 @end
 
 

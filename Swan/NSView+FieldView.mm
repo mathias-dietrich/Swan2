@@ -81,6 +81,11 @@
     bKing = [self imageResize:[NSImage imageNamed:@"Chess_kdt60"] newSize:size];
     bQueen = [self imageResize:[NSImage imageNamed:@"Chess_qdt60"] newSize:size];
     bPawn = [self imageResize:[NSImage imageNamed:@"Chess_pdt60"] newSize:size];
+    
+    
+    self->drpEngine0.delegate = self;
+    self->drpEngine1.delegate = self;
+    self->drpGame.delegate = self;
 
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont fontWithName:@"Helvetica" size:17], NSFontAttributeName,[NSColor blackColor], NSForegroundColorAttributeName, nil];
     attributesSmall = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont fontWithName:@"Helvetica" size:13], NSFontAttributeName,[NSColor grayColor], NSForegroundColorAttributeName, nil];
@@ -259,5 +264,72 @@
         return smallImage;
     }
     return nil;
+}
+
+
+- (void)disablePieceSelection{
+    [btnKingW setEnabled: NO];
+    [btnQueenW setEnabled: NO];
+    [btnRookW setEnabled: NO];
+    [btnBishopW setEnabled: NO];
+    [btnKnightW setEnabled: NO];
+    [btnPawnW setEnabled: NO];
+
+    [btnKingB setEnabled: NO];
+    [btnQueenB setEnabled: NO];
+    [btnRookB setEnabled: NO];
+    [btnBishopB setEnabled: NO];
+    [btnKnightB setEnabled: NO];
+    [btnPawnB setEnabled: NO];
+}
+- (void)enablePieceSelection{
+    [btnKingW setEnabled: YES];
+    [btnQueenW setEnabled: YES];
+    [btnRookW setEnabled: YES];
+    [btnBishopW setEnabled: YES];
+    [btnKnightW setEnabled: YES];
+    [btnPawnW setEnabled: YES];
+
+    [btnKingB setEnabled: YES];
+    [btnQueenB setEnabled: YES];
+    [btnRookB setEnabled: YES];
+    [btnBishopB setEnabled: YES];
+    [btnKnightB setEnabled: YES];
+    [btnPawnB setEnabled: YES];
+}
+- (void)enableWhitePromotion{
+    [btnQueenW setEnabled: YES];
+    [btnRookW setEnabled: YES];
+    [btnBishopW setEnabled: YES];
+    [btnKnightW setEnabled: YES];
+}
+- (void)enableBlackPromotion{
+    [btnQueenB setEnabled: YES];
+    [btnRookB setEnabled: YES];
+    [btnBishopB setEnabled: YES];
+    [btnKnightB setEnabled: YES];
+}
+
+-(void)comboBoxSelectionDidChange:(NSNotification *)notification{
+    if ([notification object] == drpEngine0) {
+        NSString *engineName = [drpEngine0 objectValueOfSelectedItem];
+        //engineName0 = std::string([engineName UTF8String]);
+       // if(engineName0 == "Player"){
+          //  isWhiteHuman = true;
+          //  return;
+       // }
+       // [self setupEngine0:engineName0];
+       // isWhiteHuman = false;
+   }
+   else if ([notification object] == drpEngine1) {
+       NSString *engineName = [drpEngine1 objectValueOfSelectedItem];
+      // engineName1 = std::string([engineName UTF8String]);
+      // if(engineName1 == "Player"){
+         //  isBlackHuman = true;
+          // return;
+       //}
+      // [self setupEngine1:engineName1];
+      // isBlackHuman = false;
+   }
 }
 @end

@@ -35,6 +35,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)setfen:(id)sender;
 - (IBAction)start:(id)sender;
 
+- (IBAction)setKingW:(id)sender;
+- (IBAction)setKingB:(id)sender;
+- (IBAction)setQueenW:(id)sender;
+- (IBAction)setQueenB:(id)sender;
+- (IBAction)setRookpW:(id)sender;
+- (IBAction)setRookpB:(id)sender;
+- (IBAction)setKnightW:(id)sender;
+- (IBAction)setKnightB:(id)sender;
+- (IBAction)setBishopW:(id)sender;
+- (IBAction)setBishopB:(id)sender;
+- (IBAction)setPawnW:(id)sender;
+- (IBAction)setPawnB:(id)sender;
+
+- (void)call:(NSString*)b;
 
 @end
 

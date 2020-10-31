@@ -42,17 +42,14 @@ public:
     
     void setup(){
         board = new TBoard();
-        board->setFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+       
         newGame();
         vEngine = new VEngine();
         vEngine->listener = this;
         vEngine->init("/Users/mdietric/Swan2/engines/stockfish");
-        set.whiteToMove = true;
-        
         engineWrapper = new EngineWrapper();
         
-        timeWMsec = 3000;
-        timeBMsec = 3000;
+
     }
     
     void close(){
@@ -65,7 +62,7 @@ public:
     
     void clearToFields(){
         for(int i=0;i<64;i++){
-            set.toFields[i] = -1;
+            toFields[i] = -1;
         }
         nextToField = 0;
     }
@@ -73,10 +70,8 @@ public:
     void flipColor(){
         if(board->sideToMove==WHITE){
             board->sideToMove=BLACK;
-            set.whiteToMove=false;
         }else{
             board->sideToMove=WHITE;
-            set.whiteToMove=true;
         }
     }
     
@@ -95,7 +90,7 @@ private:
     int timeWMsec;
     int timeBMsec;
     
-    Set set;
+  //  Set set;
     EEntryState entryState = ES_NONE;
     
     VEngine * vEngine;
@@ -105,6 +100,8 @@ private:
     Game game;
     Ply ply;
     bool isCheck;
+    int toFields[64];
+    int fromField;
 };
 
 #endif /* UI_hpp */

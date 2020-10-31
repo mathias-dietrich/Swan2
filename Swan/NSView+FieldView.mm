@@ -14,6 +14,11 @@
 }
 
 -(void) exec:(ECmd) cmd params:(NSString *) p parami:(int)i{
+    switch(cmd){
+        case CMD_SETFEN:
+            p = [fenField stringValue];
+            break;
+    }
     [facade exec: cmd params: p parami:i];
 }
 

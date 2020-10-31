@@ -36,7 +36,6 @@ void UI::listen(EReply c, string s){
                     // Check if Mate;
                     ply.strDisplay += "+";
                 }
-                set.fen = board->getFen(board);
                 game.plies.push_back(ply);
                 return;
             }
@@ -45,7 +44,6 @@ void UI::listen(EReply c, string s){
             runClock = false;
             if(isCheck){
                 ply.strDisplay += "++";
-                set.fen = board->getFen(board);
                 game.plies.push_back(ply);
                 if(board->sideToMove == BLACK){
                     game.result = "1-0";
@@ -66,7 +64,7 @@ void UI::listen(EReply c, string s){
                 token = s.substr(0, pos);
                 std::cout << token << std::endl;
                 if(from == getPosFromStr(token.substr(0, 2))){
-                    set.toFields[nextToField] = getPosFromStr(token.substr(2, 2));
+                    toFields[nextToField] = getPosFromStr(token.substr(2, 2));
                     nextToField++;
                 }
                 s.erase(0, pos + delimiter.length());
@@ -106,7 +104,6 @@ void UI::listen(EReply c, string s){
                 board->halfmove++;
             }
             
-           
             vEngine->getLegalMoves(board->getFen(board),ES_MATE);
             break;
     }
@@ -146,6 +143,9 @@ void UI::mouseUp(int pos){
 
 void UI::mouseDown(int pos){
     switch(entryState){
+        case ES_PROMOTION:
+            return;
+            
         case ES_FROMDOWN:
             to = pos;
             entryState = ES_TODOWN;
@@ -153,7 +153,7 @@ void UI::mouseDown(int pos){
 
         case ES_FROMUP:
             if(from == pos){
-                set.fromField = -1;
+                fromField = -1;
                 entryState = ES_NONE;
                 clearToFields();
             }
@@ -161,10 +161,10 @@ void UI::mouseDown(int pos){
             
         case ES_TODOWN:
             for(int i=0;i<64;i++){
-                if(pos == set.toFields[i]){
+                if(pos == toFields[i]){
                     entryState = ES_NONE;
                     clearToFields();
-                    set.fromField = -1;
+                    fromField = -1;
                     
                     // Make Move
                     EPiece p = board->squares[from];
@@ -218,11 +218,17 @@ void UI::mouseDown(int pos){
                     if(bCastlingS)board->castelingRights += 4;
                     if(bCastlingL)board->castelingRights += 8;
                     
-                    // copy
-                    for(int i=0; i < 64; i++){
-                        set.s[i] = board->squares[i];
+                    // Promotion
+                    if(board->sideToMove == WHITE ){
+                        if(p==W_PAWN &&  pos> 55){
+                            entryState = ES_PROMOTION;
+                        }
+                    }else{
+                        if(p==B_PAWN && pos < 8){
+                            entryState = ES_PROMOTION;
+                        }
                     }
-                    
+    
                     // Check if King in check;
                     vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
 
@@ -231,30 +237,31 @@ void UI::mouseDown(int pos){
             }
             entryState = ES_NONE;
             clearToFields();
-            set.fromField = -1;
+            fromField = -1;
             break;
             
         case ES_TOUP:
             break;
             
         case ES_NONE:
-            if(set.s[pos] == EMPTY){
+            if(board->squares[pos] == EMPTY){
                 return;
             }
-            if(set.whiteToMove && set.s[pos]  > 6){
+            if(board->sideToMove == WHITE && board->squares[pos]  > 6){
                 return;
             }
-            if(!set.whiteToMove && set.s[pos]  < 7  ){
+            if(board->sideToMove == BLACK && board->squares[pos]  < 7){
                 return;
             }
             from = pos;
-            set.fromField = pos;
+            fromField = pos;
             entryState = ES_FROMDOWN;
             break;
     }
 }
 
 Set UI::getSet(){
+    Set set;
     
     // Clock  -----------------------------------
     if(runClock){
@@ -294,51 +301,27 @@ Set UI::getSet(){
         game.gameState = GAME_TIMEOUT;
     }
     set.pngDescription = game.getDescription();
+    for(int i=0;i<64;++i){
+        set.s[i] = board->squares[i];
+        set.toFields[i] = toFields[i] ;
+        set.fromField = fromField;
+    }
+    set.whiteToMove = board->sideToMove == WHITE;
+    set.fen = board->getFen(board);
     return set;
 }
 
 void UI::newGame(){
-    for(int i=0; i < 64; i++){
-        set.s[i] = EMPTY;
-        set.toFields[i] = -1;
+    runClock = false;
+    
+    // TODO add differet Time Sets
+    timeWMsec = 3000;
+    timeBMsec = 3000;
+    board->setFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    for(int i=0;i<64;++i){
+        toFields[i] = -1;
     }
-    set.fromField = -1;
-
-    set.s[0] = W_ROOK;
-    set.s[1] = W_KNIGHT;
-    set.s[2] = W_BISHOP;
-    set.s[3] = W_QUEEN;
-    set.s[4] = W_KING;
-    set.s[5] = W_BISHOP;
-    set.s[6] = W_KNIGHT;
-    
-    set.s[7] = W_ROOK;
-    set.s[8] = W_PAWN;
-    set.s[9] = W_PAWN;
-    set.s[10] = W_PAWN;
-    set.s[11] = W_PAWN;
-    set.s[12] = W_PAWN;
-    set.s[13] = W_PAWN;
-    set.s[14] = W_PAWN;
-    set.s[15] = W_PAWN;
-    
-    set.s[48] = B_PAWN;
-    set.s[49] = B_PAWN;
-    set.s[50] = B_PAWN;
-    set.s[51] = B_PAWN;
-    set.s[52] = B_PAWN;
-    set.s[53] = B_PAWN;
-    set.s[54] = B_PAWN;
-    set.s[55] = B_PAWN;
-    
-    set.s[56] = B_ROOK;
-    set.s[57] = B_KNIGHT;
-    set.s[58] = B_BISHOP;
-    set.s[59] = B_QUEEN;
-    set.s[60] = B_KING;
-    set.s[61] = B_BISHOP;
-    set.s[62] = B_KNIGHT;
-    set.s[63] = B_ROOK;
+    fromField = -1;
     game.gameState = GAME_NONE;
     game.plies.clear();
 }
@@ -374,7 +357,7 @@ void UI::exec(ECmd cmd, string s, int p){
             break;
             
         case CMD_START:
-            runClock = true;
+            newGame();
             break;
             
         case CMD_SETBOARD:
@@ -399,8 +382,9 @@ void UI::exec(ECmd cmd, string s, int p){
             
             break;
         case CMD_SETFEN:
-            
+            board->setFEN(s);
             break;
+            
         case CMD_FINDMOVES:
             runClock = true;
             vEngine->getLegalMoves(s,ES_MOVESAVAILABLE);

@@ -185,6 +185,26 @@ void UI::mouseDown(int pos){
                     ply.str = posFromInt(from)+posFromInt(pos);
                     ply.strDisplay =  board->getPGNCode(p) + posFromInt(from)+posFromInt(pos);
                     
+                    // en passe hit
+                    if(board->enPassentSquare != SQ_NONE && ((Square)pos) == board->enPassentSquare){
+                        if(p==W_PAWN){
+                            board->squares[pos-8] = EMPTY;
+                        }
+                        if(p==B_PAWN){
+                            board->squares[pos+8] = EMPTY;
+                        }
+                    }
+                        
+                    // en passe h
+                    board->enPassentSquare = SQ_NONE;
+                    if(p==W_PAWN && pos == from + 16){
+                        board->enPassentSquare = (Square) (pos - 8);
+                    }
+                    if(p==B_PAWN && pos == from - 16){
+                        board->enPassentSquare = (Square) (pos + 8);
+                    }
+                   
+                    
                     if( p == W_KING && f == SQ_E1 && t == SQ_G1){
                         board->squares[SQ_H1] = EMPTY;
                         board->squares[SQ_F1] = W_ROOK;

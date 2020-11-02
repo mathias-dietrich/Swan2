@@ -49,8 +49,7 @@ public:
     TBitBoard pcsOfColor[BLACK+1];
     
     Color sideToMove = WHITE;
-    //int currentPly;
-    
+
     int rule50 = 0;
     int halfmove = 0;
     GameState gameState = GAME_NONE;
@@ -73,13 +72,6 @@ public:
          enPassentSquare = SQ_NONE;
     }
 
-    void move(string move){
-        Square from = getPosFromStr(move.substr(0,2));
-        Square to = getPosFromStr(move.substr(2,2));
-        squares[to] =  squares[from];
-        squares[from] = EMPTY;
-    }
-    
     string getPGNCode(EPiece piece){
         if(piece == W_PAWN  || piece == B_PAWN ){
             return "";
@@ -250,11 +242,11 @@ public:
            fen += " ";
            string temp("abcdefgh");
            stringstream ss;
-           
+        
            if(board->enPassentSquare != SQ_NONE){
-               int r = (board->enPassentSquare - 8) % 8;
-               int f = (board->enPassentSquare - 8) / 8;
-               ss << temp.at(r)  << to_string(f*8);
+               int r = (board->enPassentSquare ) % 8;
+               int f = (board->enPassentSquare ) / 8;
+               ss << temp.at(r)  << to_string(f+1);
                fen += ss.str();
            }else{
                fen += "-";

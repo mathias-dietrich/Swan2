@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
     IBOutlet  NSColorWell * colorWell;
     
     IBOutlet  NSTextView * pngView;
+    IBOutlet NSButton * btnSetMode;
     
     NSTimer * _timer;
     NSImage *wBishop;
@@ -63,8 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
     NSDictionary *attributesSmall;
     
     Facade * facade;
-    
+    bool setMode;
     Set set;
+    EPiece pieceSelected;
 }
 
 - (void)flip;
@@ -79,6 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enableBlackPromotion;
 
 - (void)comboBoxSelectionDidChange:(NSNotification *)notification;
+- (void)clearBg;
 @end
 
 

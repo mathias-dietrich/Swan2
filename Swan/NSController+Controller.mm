@@ -69,40 +69,40 @@
 }
 
 - (IBAction)setKingW:(id)sender{
-
+    [view exec:CMD_SETKW params:@"" parami:0];
 }
 - (IBAction)setKingB:(id)sender{
-
+    [view exec:CMD_SETKB params:@"" parami:0];
 }
 - (IBAction)setQueenW:(id)sender{
-
+    [view exec:CMD_SETQW params:@"" parami:0];
 }
 - (IBAction)setQueenB:(id)sender{
-
+    [view exec:CMD_SETQB params:@"" parami:0];
 }
 - (IBAction)setRookpW:(id)sender{
-
+    [view exec:CMD_SETRW params:@"" parami:0];
 }
 - (IBAction)setRookpB:(id)sender{
-
+    [view exec:CMD_SETRB params:@"" parami:0];
 }
 - (IBAction)setKnightW:(id)sender{
-
+    [view exec:CMD_SETNW params:@"" parami:0];
 }
 - (IBAction)setKnightB:(id)sender{
-
+    [view exec:CMD_SETNB params:@"" parami:0];
 }
 - (IBAction)setBishopW:(id)sender{
-
+    [view exec:CMD_SETBW params:@"" parami:0];
 }
 - (IBAction)setBishopB:(id)sender{
-
+    [view exec:CMD_SETBB params:@"" parami:0];
 }
 - (IBAction)setPawnW:(id)sender{
-
+    [view exec:CMD_SETPW params:@"" parami:0];
 }
 - (IBAction)setPawnB:(id)sender{
-
+    [view exec:CMD_SETPB params:@"" parami:0];
 }
 
 @end

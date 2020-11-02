@@ -13,10 +13,185 @@
     isFliped = !isFliped;
 }
 
+- (void)clearBg{
+    btnQueenW.layer.borderWidth = 0;
+    btnQueenB.layer.borderWidth = 0;
+    btnKingW.layer.borderWidth = 0;
+    btnKingB.layer.borderWidth = 0;
+    btnRookW.layer.borderWidth = 0;
+    btnRookB.layer.borderWidth = 0;
+    btnBishopW.layer.borderWidth = 0;
+    btnBishopB.layer.borderWidth = 0;
+    btnKnightW.layer.borderWidth = 0;
+    btnKnightB.layer.borderWidth = 0;
+    btnPawnW.layer.borderWidth = 0;
+    btnPawnB.layer.borderWidth = 0;
+}
+
 -(void) exec:(ECmd) cmd params:(NSString *) p parami:(int)i{
     switch(cmd){
         case CMD_SETFEN:
             p = [fenField stringValue];
+            [self.window makeFirstResponder:nil];
+            [fenField resignFirstResponder];
+            break;
+            
+        case CMD_SETBOARD:
+            setMode = !setMode;
+            if(setMode){
+                [self enablePieceSelection];
+                 btnSetMode.layer.backgroundColor = NSColor.redColor.CGColor;
+                 btnSetMode.layer.borderColor = NSColor.whiteColor.CGColor;
+
+            }else{
+                [self disablePieceSelection];
+                btnSetMode.layer.backgroundColor = NSColor.knobColor.CGColor;
+                btnSetMode.layer.borderColor = NSColor.knobColor.CGColor;
+                [self clearBg];
+            }
+            break;
+        case CMD_TOP:
+            
+            break;
+        case CMD_BACK:
+            
+            break;
+        case CMD_FORWARD:
+            
+            break;
+        case CMD_STOP:
+            
+            break;
+        case CMD_END:
+            
+            break;
+        case CMD_ANALYZE:
+            
+            break;
+        case CMD_HINT:
+            
+            break;
+        case CMD_SAVEPNG:
+            
+            break;
+        case CMD_LOADPNG:
+            
+            break;
+        case CMD_START:
+            
+            break;
+        case CMD_RESETBOARD:
+
+            break;
+        case CMD_CLEARBOARD:
+
+            break;
+        case CMD_SETTINGS:
+
+            break;
+        case CMD_SETENGINEW:
+ 
+            break;
+        case CMD_SETENGINEB:
+
+            break;
+        case CMD_RESIGN:
+
+            break;
+        case CMD_FINDMOVES:
+
+            break;
+            
+        case CMD_SETKW:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = W_KING;
+                btnKingW.layer.borderWidth = 2;
+            }
+            break;
+            
+        case CMD_SETKB:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = B_KING;
+                btnKingB.layer.borderWidth = 2;
+            }
+            break;
+            
+        case CMD_SETQW:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = W_QUEEN;
+                btnQueenW.layer.borderWidth = 2;
+            }
+            break;
+            
+        case CMD_SETQB:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = B_QUEEN;
+                btnQueenB.layer.borderWidth = 2;
+            }
+            break;
+            
+        case CMD_SETRW:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = W_ROOK;
+                btnRookW.layer.borderWidth = 2;
+            }
+            break;
+            
+        case CMD_SETRB:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = B_ROOK;
+                btnRookB.layer.borderWidth = 2;
+            }
+            break;
+            
+        case CMD_SETBW:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = W_BISHOP;
+                btnBishopW.layer.borderWidth = 2;
+            }
+            break;
+            
+        case CMD_SETBB:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = B_BISHOP;
+                btnBishopB.layer.borderWidth = 2;
+            }
+            break;
+
+        case CMD_SETNW:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = W_KNIGHT;
+                btnKnightW.layer.borderWidth = 2;
+            }
+            break;
+
+        case CMD_SETNB:
+            [self clearBg];
+            if(set.gameState!=GAME_PROMOTION){
+                pieceSelected = B_KNIGHT;
+                btnKnightB.layer.borderWidth = 2;
+            }
+            break;
+            
+        case CMD_SETPW:
+            [self clearBg];
+            pieceSelected = W_PAWN;
+            btnPawnW.layer.borderWidth = 2;
+            break;
+            
+        case CMD_SETPB:
+            [self clearBg];
+            pieceSelected = B_PAWN;
+            btnPawnB.layer.borderWidth = 2;
             break;
     }
     [facade exec: cmd params: p parami:i];
@@ -49,20 +224,38 @@
     }else{
        hit = file + rank * 8 ;
     }
+
+    if(setMode){
+        [facade setup: hit piece:pieceSelected];
+        return;
+    }
     [facade mouseDown: hit];
 }
 
 // Main refresh timer
 - (void)_timerFired:(NSTimer *)timer {
     set = [facade getSet];
-    [fenField setStringValue: [NSString stringWithCString:set.fen.c_str() encoding:[NSString defaultCStringEncoding]]];
+    NSResponder *firstResponder = [[NSApp keyWindow] firstResponder];
+    if ([firstResponder isKindOfClass:[NSText class]] && [(id)firstResponder delegate] == fenField) {
+        [fenField setBackgroundColor: NSColor.systemYellowColor];
+    }else{
+        [fenField setStringValue: [NSString stringWithCString:set.fen.c_str() encoding:[NSString defaultCStringEncoding]]];
+        [fenField setBackgroundColor: NSColor.clearColor];
+    }
     [timeW setStringValue: [NSString stringWithCString:set.timeW.c_str() encoding:[NSString defaultCStringEncoding]]];
     [timeB setStringValue: [NSString stringWithCString:set.timeB.c_str() encoding:[NSString defaultCStringEncoding]]];
     
     NSColor * c =  set.whiteToMove ? NSColor.whiteColor : NSColor.blackColor;
     [colorWell setColor:c];
+    
     [pngView setString: [NSString stringWithCString:set.pngDescription.c_str() encoding:[NSString defaultCStringEncoding]]];
     
+    if(set.gameState == GAME_PROMOTION && set.whiteToMove){
+        [ self enableWhitePromotion];
+    }
+    if(set.gameState == GAME_PROMOTION && !set.whiteToMove){
+        [ self enableBlackPromotion];
+    }
     [self setNeedsDisplay:YES];
 }
 
@@ -86,7 +279,6 @@
     bKing = [self imageResize:[NSImage imageNamed:@"Chess_kdt60"] newSize:size];
     bQueen = [self imageResize:[NSImage imageNamed:@"Chess_qdt60"] newSize:size];
     bPawn = [self imageResize:[NSImage imageNamed:@"Chess_pdt60"] newSize:size];
-    
     
     self->drpEngine0.delegate = self;
     self->drpEngine1.delegate = self;

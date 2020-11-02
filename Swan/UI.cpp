@@ -167,6 +167,7 @@ void UI::mouseDown(int pos){
                     fromField = -1;
                     
                     // Make Move
+                    board->gameState = GAME_RUNNING;
                     EPiece p = board->squares[from];
                     board->squares[pos] = p;
                     board->squares[from] = EMPTY;
@@ -222,10 +223,14 @@ void UI::mouseDown(int pos){
                     if(board->sideToMove == WHITE ){
                         if(p==W_PAWN &&  pos> 55){
                             entryState = ES_PROMOTION;
+                            board->gameState = GAME_PROMOTION;
+                            return;
                         }
                     }else{
                         if(p==B_PAWN && pos < 8){
                             entryState = ES_PROMOTION;
+                            board->gameState = GAME_PROMOTION;
+                            return;
                         }
                     }
     
@@ -308,6 +313,7 @@ Set UI::getSet(){
     }
     set.whiteToMove = board->sideToMove == WHITE;
     set.fen = board->getFen(board);
+    set.gameState = board->gameState;
     return set;
 }
 
@@ -329,31 +335,30 @@ void UI::newGame(){
 void UI::exec(ECmd cmd, string s, int p){
     switch(cmd){
         case CMD_TOP:
-            
             break;
+            
         case CMD_BACK:
-            
             break;
+            
         case CMD_FORWARD:
-            
             break;
+            
         case CMD_STOP:
-            
             break;
+            
         case CMD_END:
-            
             break;
+            
         case CMD_ANALYZE:
-            
             break;
+            
         case CMD_HINT:
-            
             break;
+            
         case CMD_SAVEPNG:
-            
             break;
-        case CMD_LOADPNG:
             
+        case CMD_LOADPNG:
             break;
             
         case CMD_START:
@@ -361,13 +366,16 @@ void UI::exec(ECmd cmd, string s, int p){
             break;
             
         case CMD_SETBOARD:
-            
             break;
+            
         case CMD_RESETBOARD:
-            
+            board->resetBoard();
             break;
-        case CMD_CLEARBOARD:
             
+        case CMD_CLEARBOARD:
+            for(int i=0;i<64;++i){
+                board->squares[i] = EMPTY;
+            }
             break;
         case CMD_SETTINGS:
             
@@ -382,12 +390,101 @@ void UI::exec(ECmd cmd, string s, int p){
             
             break;
         case CMD_SETFEN:
-            board->setFEN(s);
+        {
+            string prevFen = board->getFen(board);
+            try{
+                board->setFEN(s);
+            }
+            catch(...){
+                board->setFEN(prevFen);
+            }
             break;
-            
+        }
         case CMD_FINDMOVES:
             runClock = true;
             vEngine->getLegalMoves(s,ES_MOVESAVAILABLE);
+            break;
+
+        // Promotions
+        case CMD_SETQB:
+            if(board->gameState == GAME_PROMOTION){
+                board->squares[ply.to] = B_QUEEN;
+                board->gameState = GAME_RUNNING;
+                entryState = ES_NONE;
+                ply.strDisplay+="Q";
+                vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+            }
+            break;
+        case CMD_SETRB:
+            if(board->gameState == GAME_PROMOTION){
+                board->squares[ply.to] = B_ROOK;
+                board->gameState = GAME_RUNNING;
+                entryState = ES_NONE;
+                ply.strDisplay+="R";
+                vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+            }
+            break;
+        case CMD_SETNB:
+            if(board->gameState == GAME_PROMOTION){
+                board->squares[ply.to] = B_KNIGHT;
+                board->gameState = GAME_RUNNING;
+                entryState = ES_NONE;
+                ply.strDisplay+="N";
+                vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+            }
+            break;
+        case CMD_SETBB:
+            if(board->gameState == GAME_PROMOTION){
+                board->squares[ply.to] = B_BISHOP;
+                board->gameState = GAME_RUNNING;
+                entryState = ES_NONE;
+                ply.strDisplay+="B";
+                vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+            }
+            break;
+        case CMD_SETQW:
+            if(board->gameState == GAME_PROMOTION){
+                board->squares[ply.to] = W_QUEEN;
+                board->gameState = GAME_RUNNING;
+                entryState = ES_NONE;
+                ply.strDisplay+="Q";
+                vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+            }
+            break;
+        case CMD_SETRW:
+            if(board->gameState == GAME_PROMOTION){
+                board->squares[ply.to] = W_ROOK;
+                board->gameState = GAME_RUNNING;
+                entryState = ES_NONE;
+                ply.strDisplay+="R";
+                vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+            }
+            break;
+        case CMD_SETNW:
+            if(board->gameState == GAME_PROMOTION){
+                board->squares[ply.to] = W_KNIGHT;
+                board->gameState = GAME_RUNNING;
+                entryState = ES_NONE;
+                ply.strDisplay+="N";
+                vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+            }
+            break;
+        case CMD_SETBW:
+            if(board->gameState == GAME_PROMOTION){
+                board->squares[ply.to] = W_BISHOP;
+                board->gameState = GAME_RUNNING;
+                entryState = ES_NONE;
+                ply.strDisplay+="B";
+                vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+            }
+            break;
+        case CMD_SETKW:
+            break;
+        case CMD_SETKB:
+            break;
+        case CMD_SETPW:
+            break;
+        case CMD_SETPB:
             break;
     }
 }

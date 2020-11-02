@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Facade : NSObject
 
+-(void) setup:(int) pos piece: (EPiece) piece;
 -(void) setup;
 -(void) close;
 

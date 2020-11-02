@@ -48,8 +48,14 @@ public:
         vEngine->listener = this;
         vEngine->init("/Users/mdietric/Swan2/engines/stockfish");
         engineWrapper = new EngineWrapper();
-        
-
+    }
+    
+    void setup(int field, EPiece piece){
+        if(board->squares[field] != EMPTY){
+            board->squares[field] = EMPTY;
+        }else{
+            board->squares[field] = piece;
+        }
     }
     
     void close(){
@@ -98,6 +104,7 @@ private:
     TBoard * board;
     bool runClock = false;
     Game game;
+   
     Ply ply;
     bool isCheck;
     int toFields[64];

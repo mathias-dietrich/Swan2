@@ -10,6 +10,11 @@
 
 @implementation Facade
 
+
+-(void) setup:(int) pos piece: (EPiece) piece{
+    UI::of()->setup(pos, piece);
+}
+
 -(void) setup{
     UI::of()->setup();
 }

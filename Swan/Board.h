@@ -36,10 +36,7 @@ public:
     }
     
     int64 hash;
-    int lastTriggerEvent;// ply whith pawn move or capture
     int castelingRights = 1+2+4+8;
-    bool inCheck;
-    int repetitions;
     Square enPassentSquare = SQ_NONE;
     
     // Holds the piece information per square
@@ -52,8 +49,11 @@ public:
     TBitBoard pcsOfColor[BLACK+1];
     
     Color sideToMove = WHITE;
-    int currentPly;
+    //int currentPly;
     
+    int rule50 = 0;
+    int halfmove = 0;
+    GameState gameState = GAME_NONE;
     Square findKingSquare(Color color){
         for(int i=0;i<64;i++){
             if(color==WHITE && squares[i] == W_KING){
@@ -66,8 +66,12 @@ public:
         return SQ_NONE;
     }
 
-    int rule50 = 0;
-    int halfmove =0;
+    void resetBoard(){
+         rule50 = 0;
+         halfmove = 0;
+         setFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+         enPassentSquare = SQ_NONE;
+    }
 
     void move(string move){
         Square from = getPosFromStr(move.substr(0,2));
@@ -75,6 +79,7 @@ public:
         squares[to] =  squares[from];
         squares[from] = EMPTY;
     }
+    
     string getPGNCode(EPiece piece){
         if(piece == W_PAWN  || piece == B_PAWN ){
             return "";

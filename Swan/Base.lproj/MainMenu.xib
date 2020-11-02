@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -864,6 +865,7 @@
                             <outlet property="btnQueenW" destination="x0M-b3-ekb" id="bcV-x0-7RI"/>
                             <outlet property="btnRookB" destination="Hzn-Yk-mps" id="7dp-ap-57r"/>
                             <outlet property="btnRookW" destination="njg-Xw-NPP" id="VXy-ek-LdR"/>
+                            <outlet property="btnSetMode" destination="QZu-zX-0gk" id="tcY-Tf-n96"/>
                             <outlet property="colorWell" destination="VqZ-UR-ffS" id="M1i-v4-jEb"/>
                             <outlet property="drpEngine0" destination="1sG-nB-Kfw" id="W2L-hf-Zu5"/>
                             <outlet property="drpEngine1" destination="zj7-I8-01r" id="Cec-w3-IW4"/>
@@ -922,7 +924,7 @@
                     <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yd0-rm-da6">
                         <rect key="frame" x="823" y="667" width="558" height="24"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 0" drawsBackground="YES" id="oAG-tX-5hv">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 0" drawsBackground="YES" id="oAG-tX-5hv">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -931,7 +933,7 @@
                     <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BUv-AY-Mua">
                         <rect key="frame" x="824" y="643" width="557" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="bex-8Q-kES">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="bex-8Q-kES">
                             <font key="font" metaFont="system" size="10"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -992,13 +994,14 @@
                             <action selector="setQueenW:" target="Vha-3i-3Ve" id="gVU-Mw-GTA"/>
                         </connections>
                     </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="arl-cB-KeH">
+                    <button focusRingType="exterior" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="arl-cB-KeH">
                         <rect key="frame" x="1220" y="813" width="30" height="30"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Chess_klt60" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="W15-SN-US2">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Chess_klt60" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" focusRingType="exterior" imageScaling="proportionallyUpOrDown" inset="2" id="W15-SN-US2">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <color key="contentTintColor" name="AccentColor"/>
                         <connections>
                             <action selector="setKingW:" target="Vha-3i-3Ve" id="yXc-Nx-nZj"/>
                         </connections>
@@ -1226,7 +1229,7 @@
                             <action selector="savepng:" target="Vha-3i-3Ve" id="mLS-Or-pHb"/>
                         </connections>
                     </button>
-                    <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VqZ-UR-ffS">
+                    <colorWell fixedFrame="YES" enabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VqZ-UR-ffS">
                         <rect key="frame" x="824" y="10" width="52" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1304,5 +1307,8 @@
         <image name="Chess_qlt60" width="48" height="48"/>
         <image name="Chess_rdt60" width="48" height="48"/>
         <image name="Chess_rlt60" width="48" height="48"/>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

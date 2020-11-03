@@ -40,6 +40,7 @@ public:
     void findMove(string fen, EReply cmd){
         reply = cmd;
         toEngine("position fen " + fen + "\n");
+        cout << "position fen " + fen + "\n" << endl;
         toEngine("go movetime 2000\n");
     }
     
@@ -131,6 +132,9 @@ public:
     }
 
     void init(string enginepath){
+        if(isPRunning){
+            close();
+        }
         isPRunning = true;
         createChild(enginepath.c_str());
         pthread_create(&thread, NULL,  staticFunction, this);
@@ -146,7 +150,7 @@ public:
     
 private:
     FILE *  fp;
-    bool isPRunning = true;
+    bool isPRunning = false;
     int aStdinPipe[2];
     int aStdoutPipe[2];
     string legalMoves;

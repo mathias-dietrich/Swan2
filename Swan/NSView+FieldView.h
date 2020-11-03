@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
     IBOutlet NSComboBox * drpEngine0;
     IBOutlet NSComboBox * drpEngine1;
     IBOutlet NSComboBox * drpGame;
+    IBOutlet NSComboBox * drpBook0;
+    IBOutlet NSComboBox * drpBook1;
     
     IBOutlet NSButton * btnKingW;
     IBOutlet NSButton * btnQueenW;

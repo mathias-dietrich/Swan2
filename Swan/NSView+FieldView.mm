@@ -384,6 +384,38 @@
                 [circlePath stroke];
                 [circlePath fill];
             }
+            
+            if(set.lastFrom == i){
+                int aField = set.lastFrom;
+                if(isFliped){
+                    aField = 63-aField;
+                }
+                int x = aField % 8;
+                int y = aField / 8;
+                int xPos = BORDER + x * 95;
+                int yPos = BORDER + y * 95;
+                NSRect rect = NSMakeRect(xPos, yPos, 95, 95);
+                NSBezierPath* circlePath = [NSBezierPath bezierPath];
+                [circlePath appendBezierPathWithRect: rect];
+                [[NSColor blueColor] setStroke];
+                [circlePath stroke];
+            }
+            
+            if(set.lastTo == i){
+                int aField = set.lastTo;
+                if(isFliped){
+                    aField = 63-aField;
+                }
+                int x = aField % 8;
+                int y = aField / 8;
+                int xPos = BORDER + x * 95;
+                int yPos = BORDER + y * 95;
+                NSRect rect = NSMakeRect(xPos, yPos, 95, 95);
+                NSBezierPath* circlePath = [NSBezierPath bezierPath];
+                [circlePath appendBezierPathWithRect: rect];
+                [[NSColor blueColor] setStroke];
+                [circlePath stroke];
+            }
         }
     
     for(int i =0;i<64;++i){
@@ -463,7 +495,6 @@
     return nil;
 }
 
-
 - (void)disablePieceSelection{
     [btnKingW setEnabled: NO];
     [btnQueenW setEnabled: NO];
@@ -510,23 +541,19 @@
 -(void)comboBoxSelectionDidChange:(NSNotification *)notification{
     if ([notification object] == drpEngine0) {
         NSString *engineName = [drpEngine0 objectValueOfSelectedItem];
-        //engineName0 = std::string([engineName UTF8String]);
-       // if(engineName0 == "Player"){
-          //  isWhiteHuman = true;
-          //  return;
-       // }
-       // [self setupEngine0:engineName0];
-       // isWhiteHuman = false;
+        [facade exec:CMD_SETENGINEW params: engineName parami:0];
    }
    else if ([notification object] == drpEngine1) {
        NSString *engineName = [drpEngine1 objectValueOfSelectedItem];
-      // engineName1 = std::string([engineName UTF8String]);
-      // if(engineName1 == "Player"){
-         //  isBlackHuman = true;
-          // return;
-       //}
-      // [self setupEngine1:engineName1];
-      // isBlackHuman = false;
+       [facade exec:CMD_SETENGINEB params: engineName parami:0];
+   }
+   else if ([notification object] == drpBook0) {
+       NSString *book = [drpBook0 objectValueOfSelectedItem];
+       [facade exec:CMD_SETBOOK0 params: book parami:0];
+   }
+   else if ([notification object] == drpBook1) {
+       NSString *book = [drpBook1 objectValueOfSelectedItem];
+       [facade exec:CMD_SETBOOK1 params: book parami:0];
    }
 }
 @end

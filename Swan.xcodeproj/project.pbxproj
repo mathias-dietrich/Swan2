@@ -24,6 +24,7 @@
 /* Begin PBXFileReference section */
 		4F561281254AD53F009B984B /* EngineWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EngineWrapper.h; sourceTree = "<group>"; };
 		4F561283254AD8C6009B984B /* Game.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
+		4F56128725514DD1009B984B /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		4F7E4DF12549689000B9F0B4 /* UI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = UI.cpp; sourceTree = "<group>"; };
 		4F7E4DF22549689000B9F0B4 /* UI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UI.h; sourceTree = "<group>"; };
 		4F7E4DF72549914500B9F0B4 /* Listener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Listener.h; sourceTree = "<group>"; };
@@ -139,6 +140,7 @@
 				4F7E4E0D25499E0300B9F0B4 /* Global.h */,
 				4F7E4E0E25499E3900B9F0B4 /* Global.cpp */,
 				4F561283254AD8C6009B984B /* Game.h */,
+				4F56128725514DD1009B984B /* Config.h */,
 			);
 			name = entity;
 			sourceTree = "<group>";

@@ -10,6 +10,11 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
+#include <boost/algorithm/string.hpp>
 
 #include "Types.h"
 #include "Listener.h"
@@ -18,6 +23,7 @@
 #include "EngineWrapper.h"
 #include "Board.h"
 #import "Game.h"
+#import "Config.h"
 
 using namespace std;
 
@@ -46,8 +52,15 @@ public:
         newGame();
         vEngine = new VEngine();
         vEngine->listener = this;
-        vEngine->init("/Users/mdietric/Swan2/engines/stockfish");
-        engineWrapper = new EngineWrapper();
+        vEngine->init(config.engineRoot + "stockfish");
+        
+        engine0 = new EngineWrapper();
+        engine0->listener = this;
+        engine0->init(config.engineRoot + "stockfish");
+        
+        engine1 = new EngineWrapper();
+        engine1->listener = this;
+        engine1->init(config.engineRoot + "stockfish");
     }
     
     void setup(int field, EPiece piece){
@@ -60,9 +73,11 @@ public:
     
     void close(){
         vEngine->close();
-        engineWrapper->close();
+        engine0->close();
+        engine1->close();
         delete vEngine;
-        delete engineWrapper;
+        delete engine0;
+        delete engine1;
         delete board;
     }
     
@@ -82,6 +97,7 @@ public:
     }
     
 private:
+    Config config;
     static UI * instance;
     UI() {}
     void newGame();
@@ -100,7 +116,14 @@ private:
     EEntryState entryState = ES_NONE;
     
     VEngine * vEngine;
-    EngineWrapper * engineWrapper;
+    EngineWrapper * engine0;
+    EngineWrapper * engine1;
+    string engineName0 = "Player";
+    string engineName1 = "stockfish";
+    
+    string bookeName0 = "No Book";
+    string bookeName1 = "No Book";
+    
     TBoard * board;
     bool runClock = false;
     Game game;
@@ -109,6 +132,10 @@ private:
     bool isCheck;
     int toFields[64];
     int fromField;
+    int lastTo = -1;
+    int lastFrom = -1;
+    
+    void go(int from, int to, string promo);
 };
 
 #endif /* UI_hpp */

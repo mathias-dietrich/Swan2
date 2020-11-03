@@ -7,6 +7,7 @@
 
 #include "UI.h"
 
+
  UI * UI::instance;
 
 void UI::listen(EReply c, int params[]){
@@ -20,6 +21,32 @@ void UI::listen(EReply c, string s){
     size_t pos = 0;
     std::string token;
     switch(c){
+;
+        case ES_ENGINE0:
+        case ES_ENGINE1:
+        {
+            std::string delimiter = "/n";
+            std::stringstream ss(s);
+             std::string to;
+               while(std::getline(ss,to,'\n')){
+                   if (to.rfind("bestmove", 0) == 0) {
+                       cout << to << endl;
+                       string move = to.substr (9,5);
+                       cout << move << endl;
+                       int from  = getPosFromStr(move.substr (0,2));
+                       int to  = getPosFromStr(move.substr (2,2));
+                       string promo = move.substr (5,1);
+                       go(from,to, promo);
+                       return;
+                   }
+                   if (to.rfind("info", 0) == 0) {
+                       cout << to << endl;
+                       continue;
+                   }
+               }
+            break;
+        }
+            
         case ES_MATE:
         {
             bool haveMoves = false;
@@ -31,16 +58,30 @@ void UI::listen(EReply c, string s){
                 }
                 s.erase(0, pos + delimiter.length());
             }
+            // no moves - in check? ============================================
             if(haveMoves){
                 if(isCheck){
                     // Check if Mate;
                     ply.strDisplay += "+";
                 }
                 game.plies.push_back(ply);
+                
+                // Next move - ============================================
+                if(board->sideToMove == WHITE){
+                    if(engineName0 == "Player"){
+                        return;
+                    }
+                    engine0->findMove(board->getFen(board), ES_ENGINE0);
+                }else{
+                    if(engineName1 == "Player"){
+                        return;
+                    }
+                    engine1->findMove(board->getFen(board), ES_ENGINE1);
+                }
                 return;
             }
             
-            // no moves
+            // no moves - Game END ============================================
             runClock = false;
             if(isCheck){
                 ply.strDisplay += "++";
@@ -141,6 +182,157 @@ void UI::mouseUp(int pos){
     }
 }
 
+void UI::go(int from, int to, string promo){
+    
+    Square f = (Square)from;
+    Square t = (Square)to;
+    
+    // Ply
+    EPiece p = board->squares[from];
+    ply.from = from;
+    ply.to = to;
+    ply.str = posFromInt(from)+posFromInt(to);
+    ply.strDisplay =  board->getPGNCode(p) + posFromInt(from)+posFromInt(to);
+    
+    bool wCastlingS = board->castelingRights & 1;
+    bool wCastlingL = board->castelingRights & 2;
+    bool bCastlingS = board->castelingRights & 4;
+    bool bCastlingL = board->castelingRights & 8;
+    
+    if(p==W_KING){
+        wCastlingS = false;
+        wCastlingL = false;
+    }
+   
+    if(p==B_KING){
+        bCastlingS = false;
+        bCastlingL = false;
+    }
+    if(p==W_ROOK && from==SQ_A1){
+        wCastlingL = false;
+    }
+    if(p==W_ROOK && from==SQ_H1){
+        wCastlingS = false;
+    }
+    if(p==B_ROOK && from==SQ_A8){
+        bCastlingL = false;
+    }
+    if(p==B_ROOK && from==SQ_H8){
+        bCastlingS = false;
+    }
+    
+    // Make Move
+    board->gameState = GAME_RUNNING;
+    board->squares[to] = p;
+    board->squares[from] = EMPTY;
+    
+    // Promotion
+    if(promo != " "){
+        if("q" == promo){
+            if(board->sideToMove == WHITE){
+                board->squares[from] = W_QUEEN;
+            }else{
+                board->squares[from] = B_QUEEN;
+            }
+        }
+        if("r"==promo){
+            if(board->sideToMove == WHITE){
+                board->squares[from] = W_ROOK;
+            }else{
+                board->squares[from] = B_ROOK;
+            }
+        }
+        if("n"==promo){
+            if(board->sideToMove == WHITE){
+                board->squares[from] = W_KNIGHT;
+            }else{
+                board->squares[from] = B_KNIGHT;
+            }
+        }
+        if("b"==promo){
+            if(board->sideToMove == WHITE){
+                board->squares[from] = W_BISHOP;
+            }else{
+                board->squares[from] = B_BISHOP;
+            }
+        }
+    }
+
+    // En passe hit
+    if(board->enPassentSquare != SQ_NONE && ((Square)to) == board->enPassentSquare){
+        if(p==W_PAWN){
+            board->squares[to-8] = EMPTY;
+        }
+        if(p==B_PAWN){
+            board->squares[to+8] = EMPTY;
+        }
+    }
+        
+    // En passe h
+    board->enPassentSquare = SQ_NONE;
+    if(p==W_PAWN && to == from + 16){
+        board->enPassentSquare = (Square) (to - 8);
+    }
+    if(p==B_PAWN && to == from - 16){
+        board->enPassentSquare = (Square) (to + 8);
+    }
+    
+    // Castling
+    if( p == W_KING && f == SQ_E1 && t == SQ_G1){
+        board->squares[SQ_H1] = EMPTY;
+        board->squares[SQ_F1] = W_ROOK;
+        wCastlingS = false;
+        wCastlingL = false;
+        ply.strDisplay = "o-o";
+    }
+    if( p == W_KING && f == SQ_E1 && t == SQ_C1){
+        board->squares[SQ_A1] = EMPTY;
+        board->squares[SQ_D1] = W_ROOK;
+        wCastlingL = false;
+        wCastlingS = false;
+        ply.strDisplay = "o-o-o";
+    }
+    if( p == B_KING && f == SQ_E8 && t == SQ_G8){
+        board->squares[SQ_H8] = EMPTY;
+        board->squares[SQ_F8] = B_ROOK;
+        bCastlingS = false;
+        bCastlingL = false;
+        ply.strDisplay = "o-o";
+    }
+    if( p == B_KING && f == SQ_E8 && t == SQ_C8){
+        board->squares[SQ_A8] = EMPTY;
+        board->squares[SQ_D8] = B_ROOK;
+        bCastlingL = false;
+        bCastlingS = false;
+        ply.strDisplay = "o-o-o";
+    }
+    board->castelingRights = 0;
+    if(wCastlingS)board->castelingRights += 1;
+    if(wCastlingL)board->castelingRights += 2;
+    if(bCastlingS)board->castelingRights += 4;
+    if(bCastlingL)board->castelingRights += 8;
+    
+    // Promotion
+    if(board->sideToMove == WHITE ){
+        if(p==W_PAWN &&  to> 55){
+            entryState = ES_PROMOTION;
+            board->gameState = GAME_PROMOTION;
+            return;
+        }
+    }else{
+        if(p==B_PAWN && to < 8){
+            entryState = ES_PROMOTION;
+            board->gameState = GAME_PROMOTION;
+            return;
+        }
+    }
+    
+    lastTo = to;
+    lastFrom = from;
+    // Check if King in check;
+    vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
+}
+
 void UI::mouseDown(int pos){
     switch(entryState){
         case ES_PROMOTION:
@@ -165,98 +357,7 @@ void UI::mouseDown(int pos){
                     entryState = ES_NONE;
                     clearToFields();
                     fromField = -1;
-                    
-                    // Make Move
-                    board->gameState = GAME_RUNNING;
-                    EPiece p = board->squares[from];
-                    board->squares[pos] = p;
-                    board->squares[from] = EMPTY;
-                    
-                    // Castling
-                    Square f = (Square)from;
-                    Square t = (Square)pos;
-                    bool wCastlingS = board->castelingRights & 1;
-                    bool wCastlingL = board->castelingRights & 2;
-                    bool bCastlingS = board->castelingRights & 4;
-                    bool bCastlingL = board->castelingRights & 8;
-                    
-                    ply.from = from;
-                    ply.to = pos;
-                    ply.str = posFromInt(from)+posFromInt(pos);
-                    ply.strDisplay =  board->getPGNCode(p) + posFromInt(from)+posFromInt(pos);
-                    
-                    // en passe hit
-                    if(board->enPassentSquare != SQ_NONE && ((Square)pos) == board->enPassentSquare){
-                        if(p==W_PAWN){
-                            board->squares[pos-8] = EMPTY;
-                        }
-                        if(p==B_PAWN){
-                            board->squares[pos+8] = EMPTY;
-                        }
-                    }
-                        
-                    // en passe h
-                    board->enPassentSquare = SQ_NONE;
-                    if(p==W_PAWN && pos == from + 16){
-                        board->enPassentSquare = (Square) (pos - 8);
-                    }
-                    if(p==B_PAWN && pos == from - 16){
-                        board->enPassentSquare = (Square) (pos + 8);
-                    }
-                   
-                    
-                    if( p == W_KING && f == SQ_E1 && t == SQ_G1){
-                        board->squares[SQ_H1] = EMPTY;
-                        board->squares[SQ_F1] = W_ROOK;
-                        wCastlingS = false;
-                        wCastlingL = false;
-                        ply.strDisplay = "o-o";
-                    }
-                    if( p == W_KING && f == SQ_E1 && t == SQ_C1){
-                        board->squares[SQ_A1] = EMPTY;
-                        board->squares[SQ_D1] = W_ROOK;
-                        wCastlingL = false;
-                        wCastlingS = false;
-                        ply.strDisplay = "o-o-o";
-                    }
-                    if( p == B_KING && f == SQ_E8 && t == SQ_G8){
-                        board->squares[SQ_H8] = EMPTY;
-                        board->squares[SQ_F8] = B_ROOK;
-                        bCastlingS = false;
-                        bCastlingL = false;
-                        ply.strDisplay = "o-o";
-                    }
-                    if( p == B_KING && f == SQ_E8 && t == SQ_G8){
-                        board->squares[SQ_A8] = EMPTY;
-                        board->squares[SQ_D8] = B_ROOK;
-                        bCastlingL = false;
-                        bCastlingS = false;
-                        ply.strDisplay = "o-o-o";
-                    }
-                    board->castelingRights = 0;
-                    if(wCastlingS)board->castelingRights += 1;
-                    if(wCastlingL)board->castelingRights += 2;
-                    if(bCastlingS)board->castelingRights += 4;
-                    if(bCastlingL)board->castelingRights += 8;
-                    
-                    // Promotion
-                    if(board->sideToMove == WHITE ){
-                        if(p==W_PAWN &&  pos> 55){
-                            entryState = ES_PROMOTION;
-                            board->gameState = GAME_PROMOTION;
-                            return;
-                        }
-                    }else{
-                        if(p==B_PAWN && pos < 8){
-                            entryState = ES_PROMOTION;
-                            board->gameState = GAME_PROMOTION;
-                            return;
-                        }
-                    }
-    
-                    // Check if King in check;
-                    vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
-
+                    go(from, pos, " ");
                     return;
                 }
             }
@@ -334,6 +435,8 @@ Set UI::getSet(){
     set.whiteToMove = board->sideToMove == WHITE;
     set.fen = board->getFen(board);
     set.gameState = board->gameState;
+    set.lastTo = lastTo;
+    set.lastFrom = lastFrom;
     return set;
 }
 
@@ -344,12 +447,14 @@ void UI::newGame(){
     timeWMsec = 3000;
     timeBMsec = 3000;
     board->setFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    board->castelingRights = 15;
     for(int i=0;i<64;++i){
         toFields[i] = -1;
     }
     fromField = -1;
     game.gameState = GAME_NONE;
     game.plies.clear();
+    lastTo = -1;
 }
 
 void UI::exec(ECmd cmd, string s, int p){
@@ -397,18 +502,39 @@ void UI::exec(ECmd cmd, string s, int p){
                 board->squares[i] = EMPTY;
             }
             break;
+            
         case CMD_SETTINGS:
-            
+
             break;
+            
         case CMD_SETENGINEW:
-            
+            if(engineName0 != s && s!= "Player"){
+                engineName0 = s;
+                engine0->init(config.engineRoot + engineName0);
+            }
+            game.whitePlayer = "[" + s + "]";
             break;
+            
         case CMD_SETENGINEB:
-            
+            if(engineName1 != s && s!= "Player"){
+                engineName1 = s;
+                engine1->init(config.engineRoot + engineName1);
+            }
+            game.blackPlayer = "[" + s + "]";
             break;
+            
+        case CMD_SETBOOK0:
+            bookeName0 = s;
+            break;
+            
+        case CMD_SETBOOK1:
+            bookeName1 = s;
+            break;
+            
         case CMD_RESIGN:
-            
+            runClock = false;
             break;
+            
         case CMD_SETFEN:
         {
             string prevFen = board->getFen(board);

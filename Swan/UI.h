@@ -24,6 +24,8 @@
 #include "Board.h"
 #import "Game.h"
 #import "Config.h"
+#import "pg_key.h"
+#import "pg_show.h"
 
 using namespace std;
 
@@ -48,6 +50,8 @@ public:
     void listen(EReply c, string s);
     void newGame();
     void move(int from, int to, string promo);
+    
+    bool checkBookMove();
     
     void setup(){
         board = new TBoard();
@@ -111,6 +115,10 @@ private:
     EngineWrapper * engine0;
     EngineWrapper * engine1;
     TBoard * board;
+    
+    pg_key pg_key;
+    pg_show pg_show_w;
+    pg_show pg_show_b;
     
     //  Set set;
      EEntryState entryState = ES_NONE;

@@ -11,5 +11,6 @@
 class Config{
 public:
     string engineRoot = "/Users/mdietric/Swan2/engines/";
+    string bookRoot = "/Users/mdietric/Swan2/books/";
 };
 #endif /* Config_h */

@@ -182,6 +182,9 @@ public:
         fclose(f);
         return move;
     }
+    
+private:
+
 };
 
 #endif

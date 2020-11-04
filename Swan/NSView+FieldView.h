@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initalize;
 - (NSImage *)imageResize:(NSImage*)anImage newSize:(NSSize)newSize;
 - (void)drawRect:(NSRect)dirtyRect;
--(void) exec:(ECmd) cmd params:(NSString *) p parami:(int)i;
+- (void) exec:(ECmd) cmd params:(NSString *) p parami:(int)i;
 
 - (void)disablePieceSelection;
 - (void)enablePieceSelection;

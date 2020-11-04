@@ -9,6 +9,52 @@
 
  UI * UI::instance;
 
+bool  UI::checkBookMove(){
+    if(board->sideToMove == WHITE){
+        if(bookeName0 != "No Book"){
+            string fen = board->getFen(board);
+            U64 hash =  pg_key.findHash(fen);
+            string mv = pg_show_w.readBook(hash, config.bookRoot + bookeName0);
+            if("ERR" == mv){
+                return false;
+            }else{
+                Ply ply;
+                ply.from =  getPosFromStr(mv.substr(0,2));
+                ply.to =  getPosFromStr(mv.substr(2,2));
+                ply.str = mv;
+                from = ply.from;
+                to = ply.to;
+                string l = board->getPGNCode(board->squares[ply.from]);
+                ply.strDisplay = l+mv;
+                game.plies.push_back(ply);
+                move(from, to, "");
+                return true;
+            }
+        }
+    }else{
+        if(bookeName0 != "No Book"){
+            string fen = board->getFen(board);
+            U64 hash =  pg_key.findHash(fen);
+            string mv = pg_show_b.readBook(hash, config.bookRoot + bookeName1);
+            if("ERR" == mv){
+                return false;
+            }else{
+                Ply ply;
+                ply.from =  getPosFromStr(mv.substr(0,2));
+                ply.to =  getPosFromStr(mv.substr(2,2));
+                ply.str = mv;
+                from = ply.from;
+                to = ply.to;
+                string l = board->getPGNCode(board->squares[ply.from]);
+                ply.strDisplay = l+mv;
+                game.plies.push_back(ply);
+                move(from, to, "");
+                return true;
+            }
+        }
+    }
+    return false;
+}
 /*
  Listening to the UCI Engines =====================================================================
  */
@@ -59,17 +105,25 @@ void UI::listen(EReply c, string s){
                 }
                 game.plies.push_back(ply);
                 
-                // Next move - ============================================
+                /* ============================================
+                 Next move
+                 ============================================*/
                 if(board->sideToMove == WHITE){
-                    if(engineName0 == "Player"){
-                        return;
+                    bool isBook = checkBookMove();
+                    if(!isBook){
+                        if(engineName0 == "Player"){
+                            return;
+                        }
+                        engine0->findMove(board->getFen(board), ES_ENGINE0);
                     }
-                    engine0->findMove(board->getFen(board), ES_ENGINE0);
                 }else{
-                    if(engineName1 == "Player"){
-                        return;
+                    bool isBook = checkBookMove();
+                    if(!isBook){
+                        if(engineName1 == "Player"){
+                            return;
+                        }
+                        engine1->findMove(board->getFen(board), ES_ENGINE1);
                     }
-                    engine1->findMove(board->getFen(board), ES_ENGINE1);
                 }
                 return;
             }
@@ -94,6 +148,7 @@ void UI::listen(EReply c, string s){
         }
             
         case ES_MOVESAVAILABLE:
+        {
             while ((pos = s.find(delimiter)) != std::string::npos) {
                 token = s.substr(0, pos);
                 std::cout << token << std::endl;
@@ -104,8 +159,9 @@ void UI::listen(EReply c, string s){
                 s.erase(0, pos + delimiter.length());
             }
             break;
-            
+        }
         case ES_CHECK:
+        {
             isCheck = false;
             int kingPos = -1;
             if(board->sideToMove==BLACK){
@@ -140,6 +196,7 @@ void UI::listen(EReply c, string s){
             
             vEngine->getLegalMoves(board->getFen(board),ES_MATE);
             break;
+        }
     }
 }
 
@@ -462,7 +519,6 @@ Set UI::getSet(){
     return set;
 }
 
-
 /*
 Handing Commands from the UI  =====================================================================
  */
@@ -496,12 +552,17 @@ void UI::exec(ECmd cmd, string s, int p){
             break;
             
         case CMD_START:
+        {
             newGame();
-            if(engineName0!="Player"){
-                engine0->findMove(board->getFen(board), ES_ENGINE0);
+            runClock = true;
+            bool isBook = checkBookMove();
+            if(!isBook){
+                if(engineName0!="Player"){
+                    engine0->findMove(board->getFen(board), ES_ENGINE0);
+                }
             }
             break;
-            
+        }
         case CMD_SETBOARD:
             break;
             

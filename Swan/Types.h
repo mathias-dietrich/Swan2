@@ -19,7 +19,7 @@
 using namespace std;
 
 typedef long long TBitBoard;
-typedef long long int64;
+typedef long long U64;
 
 enum Color {
     WHITE = 0,

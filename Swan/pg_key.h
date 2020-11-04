@@ -225,7 +225,6 @@ public:
     
     char const *piece_names = "pPnNbBrRqQkK";
     
-    
     U64 findHash(string fen){
         
         // convert
@@ -316,7 +315,6 @@ public:
         }
         return key;
     }
-    
 };
 
 #endif

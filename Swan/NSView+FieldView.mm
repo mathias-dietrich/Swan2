@@ -77,9 +77,10 @@
         case CMD_LOADPNG:
             
             break;
-        case CMD_START:
             
+        case CMD_START:
             break;
+            
         case CMD_RESETBOARD:
 
             break;
@@ -193,6 +194,14 @@
             pieceSelected = B_PAWN;
             btnPawnB.layer.borderWidth = 2;
             break;
+            
+        case CMD_SETBOOK0:
+            
+            break;
+            
+        case CMD_SETBOOK1:
+            
+            break;
     }
     [facade exec: cmd params: p parami:i];
 }
@@ -282,6 +291,8 @@
     
     self->drpEngine0.delegate = self;
     self->drpEngine1.delegate = self;
+    self->drpBook0.delegate = self;
+    self->drpBook1.delegate = self;
     self->drpGame.delegate = self;
 
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont fontWithName:@"Helvetica" size:17], NSFontAttributeName,[NSColor blackColor], NSForegroundColorAttributeName, nil];

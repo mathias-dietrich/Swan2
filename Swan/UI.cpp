@@ -497,6 +497,9 @@ void UI::exec(ECmd cmd, string s, int p){
             
         case CMD_START:
             newGame();
+            if(engineName0!="Player"){
+                engine0->findMove(board->getFen(board), ES_ENGINE0);
+            }
             break;
             
         case CMD_SETBOARD:
@@ -517,17 +520,17 @@ void UI::exec(ECmd cmd, string s, int p){
             
         case CMD_SETENGINEW:
             if(engineName0 != s && s!= "Player"){
-                engineName0 = s;
-                engine0->init(config.engineRoot + engineName0);
+                engine0->init(config.engineRoot + s);
             }
+            engineName0 = s;
             game.whitePlayer = "[" + s + "]";
             break;
             
         case CMD_SETENGINEB:
             if(engineName1 != s && s!= "Player"){
-                engineName1 = s;
-                engine1->init(config.engineRoot + engineName1);
+                engine1->init(config.engineRoot + s);
             }
+            engineName1 = s;
             game.blackPlayer = "[" + s + "]";
             break;
             

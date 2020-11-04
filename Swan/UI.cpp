@@ -7,21 +7,16 @@
 
 #include "UI.h"
 
-
  UI * UI::instance;
 
-void UI::listen(EReply c, int params[]){
-    switch(c){
-
-    }
-}
-
+/*
+ Listening to the UCI Engines =====================================================================
+ */
 void UI::listen(EReply c, string s){
     std::string delimiter = ",";
     size_t pos = 0;
     std::string token;
     switch(c){
-;
         case ES_ENGINE0:
         case ES_ENGINE1:
         {
@@ -30,13 +25,11 @@ void UI::listen(EReply c, string s){
              std::string to;
                while(std::getline(ss,to,'\n')){
                    if (to.rfind("bestmove", 0) == 0) {
-                       cout << to << endl;
-                       string move = to.substr (9,5);
-                       cout << move << endl;
-                       int from  = getPosFromStr(move.substr (0,2));
-                       int to  = getPosFromStr(move.substr (2,2));
-                       string promo = move.substr (5,1);
-                       go(from,to, promo);
+                       string movestr = to.substr (9,5);
+                       int from  = getPosFromStr(movestr.substr (0,2));
+                       int to  = getPosFromStr(movestr.substr (2,2));
+                       string promo = movestr.substr (5,1);
+                       move(from,to, promo);
                        return;
                    }
                    if (to.rfind("info", 0) == 0) {
@@ -150,6 +143,65 @@ void UI::listen(EReply c, string s){
     }
 }
 
+/*
+ Mouse Down Event =====================================================================
+ */
+void UI::mouseDown(int pos){
+    switch(entryState){
+        case ES_PROMOTION:
+            return;
+            
+        case ES_FROMDOWN:
+            to = pos;
+            entryState = ES_TODOWN;
+            break;
+
+        case ES_FROMUP:
+            if(from == pos){
+                fromField = -1;
+                entryState = ES_NONE;
+                clearToFields();
+            }
+            break;
+            
+        case ES_TODOWN:
+            for(int i=0;i<64;i++){
+                if(pos == toFields[i]){
+                    entryState = ES_NONE;
+                    clearToFields();
+                    fromField = -1;
+                    move(from, pos, " ");
+                    return;
+                }
+            }
+            entryState = ES_NONE;
+            clearToFields();
+            fromField = -1;
+            break;
+            
+        case ES_TOUP:
+            break;
+            
+        case ES_NONE:
+            if(board->squares[pos] == EMPTY){
+                return;
+            }
+            if(board->sideToMove == WHITE && board->squares[pos]  > 6){
+                return;
+            }
+            if(board->sideToMove == BLACK && board->squares[pos]  < 7){
+                return;
+            }
+            from = pos;
+            fromField = pos;
+            entryState = ES_FROMDOWN;
+            break;
+    }
+}
+
+/*
+ Mouse UP Event =====================================================================
+ */
 void UI::mouseUp(int pos){
     switch(entryState){
         case ES_FROMDOWN:
@@ -182,7 +234,11 @@ void UI::mouseUp(int pos){
     }
 }
 
-void UI::go(int from, int to, string promo){
+/*
+ Making a move =====================================================================
+ */
+void UI::move(int from, int to, string promo){
+    bool r50 = true;
     
     Square f = (Square)from;
     Square t = (Square)to;
@@ -194,6 +250,12 @@ void UI::go(int from, int to, string promo){
     ply.str = posFromInt(from)+posFromInt(to);
     ply.strDisplay =  board->getPGNCode(p) + posFromInt(from)+posFromInt(to);
     
+    if(p == W_PAWN){
+        r50 = false;
+    }
+    if(p == B_PAWN){
+        r50 = false;
+    }
     bool wCastlingS = board->castelingRights & 1;
     bool wCastlingL = board->castelingRights & 2;
     bool bCastlingS = board->castelingRights & 4;
@@ -223,6 +285,11 @@ void UI::go(int from, int to, string promo){
     
     // Make Move
     board->gameState = GAME_RUNNING;
+    
+    // capture?
+    if(board->squares[to]!=EMPTY){
+        r50 = false;
+    }
     board->squares[to] = p;
     board->squares[from] = EMPTY;
     
@@ -329,63 +396,18 @@ void UI::go(int from, int to, string promo){
     
     lastTo = to;
     lastFrom = from;
+    if(r50){
+        board->rule50++;
+    }else{
+        board->rule50 = 0;
+    }
     // Check if King in check;
     vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
 }
 
-void UI::mouseDown(int pos){
-    switch(entryState){
-        case ES_PROMOTION:
-            return;
-            
-        case ES_FROMDOWN:
-            to = pos;
-            entryState = ES_TODOWN;
-            break;
-
-        case ES_FROMUP:
-            if(from == pos){
-                fromField = -1;
-                entryState = ES_NONE;
-                clearToFields();
-            }
-            break;
-            
-        case ES_TODOWN:
-            for(int i=0;i<64;i++){
-                if(pos == toFields[i]){
-                    entryState = ES_NONE;
-                    clearToFields();
-                    fromField = -1;
-                    go(from, pos, " ");
-                    return;
-                }
-            }
-            entryState = ES_NONE;
-            clearToFields();
-            fromField = -1;
-            break;
-            
-        case ES_TOUP:
-            break;
-            
-        case ES_NONE:
-            if(board->squares[pos] == EMPTY){
-                return;
-            }
-            if(board->sideToMove == WHITE && board->squares[pos]  > 6){
-                return;
-            }
-            if(board->sideToMove == BLACK && board->squares[pos]  < 7){
-                return;
-            }
-            from = pos;
-            fromField = pos;
-            entryState = ES_FROMDOWN;
-            break;
-    }
-}
-
+/*
+ Returning the Set to the UI =====================================================================
+ */
 Set UI::getSet(){
     Set set;
     
@@ -440,23 +462,10 @@ Set UI::getSet(){
     return set;
 }
 
-void UI::newGame(){
-    runClock = false;
-    
-    // TODO add differet Time Sets
-    timeWMsec = 3000;
-    timeBMsec = 3000;
-    board->setFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    board->castelingRights = 15;
-    for(int i=0;i<64;++i){
-        toFields[i] = -1;
-    }
-    fromField = -1;
-    game.gameState = GAME_NONE;
-    game.plies.clear();
-    lastTo = -1;
-}
 
+/*
+Handing Commands from the UI  =====================================================================
+ */
 void UI::exec(ECmd cmd, string s, int p){
     switch(cmd){
         case CMD_TOP:
@@ -504,7 +513,6 @@ void UI::exec(ECmd cmd, string s, int p){
             break;
             
         case CMD_SETTINGS:
-
             break;
             
         case CMD_SETENGINEW:
@@ -633,4 +641,24 @@ void UI::exec(ECmd cmd, string s, int p){
         case CMD_SETPB:
             break;
     }
+}
+
+/*
+ new Game  =====================================================================
+ */
+void UI::newGame(){
+    runClock = false;
+    
+    // TODO add differet Time Sets
+    timeWMsec = 3000;
+    timeBMsec = 3000;
+    board->setFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    board->castelingRights = 15;
+    for(int i=0;i<64;++i){
+        toFields[i] = -1;
+    }
+    fromField = -1;
+    game.gameState = GAME_NONE;
+    game.plies.clear();
+    lastTo = -1;
 }

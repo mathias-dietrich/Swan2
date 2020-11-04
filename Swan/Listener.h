@@ -14,7 +14,6 @@
 
 class Listener{
     public:
-    virtual void listen(EReply c, int params[]) = 0;
     virtual void listen(EReply c, string s) = 0;
 };
 #endif /* Listener_h */

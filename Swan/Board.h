@@ -26,33 +26,15 @@ using namespace std;
 class TBoard
 {
 public:
-    
-    TBoard(){
-        
-    }
-    
-    ~TBoard(){
-        
-    }
-    
-    int64 hash;
-    int castelingRights = 1+2+4+8;
+    GameState gameState = GAME_NONE;
     Square enPassentSquare = SQ_NONE;
-    
-    // Holds the piece information per square
+    Color sideToMove = WHITE;
     EPiece squares[SQ_H8+2];
     
-    // Bit Boards for Pieces
-    TBitBoard pcs[B_KING+2];
-    TBitBoard emptySquares;
-    TBitBoard occupiedSquares;
-    TBitBoard pcsOfColor[BLACK+1];
-    
-    Color sideToMove = WHITE;
-
+    int castelingRights = 1+2+4+8;
     int rule50 = 0;
     int halfmove = 0;
-    GameState gameState = GAME_NONE;
+   
     Square findKingSquare(Color color){
         for(int i=0;i<64;i++){
             if(color==WHITE && squares[i] == W_KING){

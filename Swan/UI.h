@@ -29,22 +29,25 @@ using namespace std;
 
 class UI : Listener{
 public:
+    
+    // Singleton
     static UI * of(){
         if(instance == 0){
             instance = new UI();
         }
        return instance;
-   }
-
+    }
     UI(UI const&) = delete;
     void operator=(UI const&) = delete;
     
+    // methods
     void mouseUp(int pos);
     void mouseDown(int pos);
     Set getSet();
     void exec(ECmd cmd, string s, int p);
-    void listen(EReply c, int params[]);
     void listen(EReply c, string s);
+    void newGame();
+    void move(int from, int to, string promo);
     
     void setup(){
         board = new TBoard();
@@ -97,45 +100,41 @@ public:
     }
     
 private:
-    Config config;
-    static UI * instance;
     UI() {}
-    void newGame();
+    static UI * instance;
     
-    int from = -1;
-    int to = -1;
-    int nextToField = 0;
-    bool fromSelected;
-    bool fromSelectedConfirmed;
-    bool toSelected;
-    
-    int timeWMsec;
-    int timeBMsec;
-    
-  //  Set set;
-    EEntryState entryState = ES_NONE;
+    Game game;
+    Ply ply;
+    Config config;
     
     VEngine * vEngine;
     EngineWrapper * engine0;
     EngineWrapper * engine1;
-    string engineName0 = "Player";
-    string engineName1 = "stockfish";
-    
-    string bookeName0 = "No Book";
-    string bookeName1 = "No Book";
-    
     TBoard * board;
+    
+    //  Set set;
+     EEntryState entryState = ES_NONE;
+    
+    bool fromSelected = false;
+    bool fromSelectedConfirmed = false;
+    bool toSelected = false;
     bool runClock = false;
-    Game game;
-   
-    Ply ply;
-    bool isCheck;
+    bool isCheck = false;
+    
+    int from = -1;
+    int to = -1;
+    int nextToField = 0;
+    int timeWMsec;
+    int timeBMsec;
     int toFields[64];
     int fromField;
     int lastTo = -1;
     int lastFrom = -1;
-    
-    void go(int from, int to, string promo);
+   
+    string engineName0 = "Player";
+    string engineName1 = "stockfish";
+    string bookeName0 = "No Book";
+    string bookeName1 = "No Book";
 };
 
 #endif /* UI_hpp */

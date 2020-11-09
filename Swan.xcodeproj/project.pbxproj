@@ -22,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4F41A6E72555B00000C41D37 /* Png.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Png.h; sourceTree = "<group>"; };
 		4F561281254AD53F009B984B /* EngineWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EngineWrapper.h; sourceTree = "<group>"; };
 		4F561283254AD8C6009B984B /* Game.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
 		4F56128725514DD1009B984B /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
@@ -87,6 +88,7 @@
 				4F7E4E0725499ACB00B9F0B4 /* pg_show.h */,
 				4F7E4E0325499AC000B9F0B4 /* magicmoves.c */,
 				4F7E4E0425499AC000B9F0B4 /* magicmoves.h */,
+				4F41A6E72555B00000C41D37 /* Png.h */,
 			);
 			name = common;
 			sourceTree = "<group>";

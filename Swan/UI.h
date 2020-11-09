@@ -26,6 +26,7 @@
 #import "Config.h"
 #import "pg_key.h"
 #import "pg_show.h"
+#import "Png.h"
 
 using namespace std;
 
@@ -128,6 +129,7 @@ private:
     bool toSelected = false;
     bool runClock = false;
     bool isCheck = false;
+    bool isAnalyse = false;
     
     int from = -1;
     int to = -1;
@@ -138,11 +140,13 @@ private:
     int fromField;
     int lastTo = -1;
     int lastFrom = -1;
+    int gamePos = 0;
    
     string engineName0 = "Player";
     string engineName1 = "stockfish";
     string bookeName0 = "No Book";
     string bookeName1 = "No Book";
+    Png png;
 };
 
 #endif /* UI_hpp */

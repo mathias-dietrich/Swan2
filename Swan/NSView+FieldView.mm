@@ -265,6 +265,11 @@
     if(set.gameState == GAME_PROMOTION && !set.whiteToMove){
         [ self enableBlackPromotion];
     }
+    if(set.isAnalyse){
+        btnAnalyse.layer.borderWidth = 1;
+    }else{
+        btnAnalyse.layer.borderWidth = 0;
+    }
     [self setNeedsDisplay:YES];
 }
 

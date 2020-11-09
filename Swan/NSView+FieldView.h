@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
     IBOutlet NSButton * btnKnightB;
     IBOutlet NSButton * btnPawnB;
     
+    IBOutlet NSButton * btnAnalyse;
+    
     IBOutlet  NSTextField * fenField;
     IBOutlet  NSTextField * timeW;
     IBOutlet  NSTextField * timeB;

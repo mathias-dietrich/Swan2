@@ -37,12 +37,37 @@
 - (IBAction)hint:(id)sender{
     [view exec:CMD_HINT params:@"" parami:0];
 }
+
+// TODO
 - (IBAction)savepng:(id)sender{
-    [view exec:CMD_SAVEPNG params:@"" parami:0];
+    NSSavePanel *save = [NSSavePanel savePanel];
+    [save setAllowedFileTypes:[NSArray arrayWithObject:@"pgn"]];
+    [save setAllowsOtherFileTypes:NO];
+    NSInteger result = [save runModal];
+    if (result == NSOKButton)
+    {
+        NSString *selectedFile = [[save URL] path];
+        [view exec:CMD_SAVEPNG params:selectedFile parami:0];
+
+    }
 }
 - (IBAction)loadpng:(id)sender{
-    [view exec:CMD_LOADPNG params:@"" parami:0];
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    [panel setCanChooseFiles:YES];
+    [panel setCanChooseDirectories:NO];
+    [panel setAllowsMultipleSelection:NO];
+    [panel setAllowedFileTypes:[NSArray arrayWithObject:@"pgn"]];
+    [panel setAllowsOtherFileTypes:NO];// yes if more than one dir is allowed
+
+    NSInteger clicked = [panel runModal];
+    if (clicked == NSFileHandlingPanelOKButton) {
+        for (NSURL *url in [panel URLs]) {
+            [view exec:CMD_LOADPNG params:url.absoluteString parami:0];
+        }
+    }
 }
+
+
 - (IBAction)setboard:(id)sender{
     [view exec:CMD_SETBOARD params:@"" parami:0];
 }

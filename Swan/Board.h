@@ -240,6 +240,10 @@ public:
            return fen;
        }
     
+    
+    /*
+     Set FEN
+     */
     int setFEN(string aFEN)
     {
         unsigned int i,j;
@@ -297,12 +301,27 @@ public:
             sideToMove = BLACK;
         }
         
-        // TODO
+        castelingRights = 0;
         string castling = strList[2];
-        string enPasse = strList[3];
+        if (castling.find("K") != std::string::npos) {
+            castling += 1;
+        }
+        if (castling.find("Q") != std::string::npos) {
+            castelingRights+= 2;
+        }
+        if (castling.find("k") != std::string::npos) {
+            castelingRights+= 4;
+        }
+        if (castling.find("q") != std::string::npos) {
+            castelingRights+= 8;
+        }
         
+        
+        string enPasse = strList[3];
         if(enPasse != "-"){
-            enPassentSquare = (Square)std::stoi(enPasse);
+            enPassentSquare = getPosFromStr(enPasse);
+        }else{
+            enPassentSquare = SQ_NONE;
         }
 
         rule50 = stoi(strList[4]);

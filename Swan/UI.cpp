@@ -74,7 +74,10 @@ void UI::listen(EReply c, string s){
                        string movestr = to.substr (9,5);
                        int from  = getPosFromStr(movestr.substr (0,2));
                        int to  = getPosFromStr(movestr.substr (2,2));
-                       string promo = movestr.substr (5,1);
+                       string promo = "";
+                       if(promo.length() > 4){
+                           promo = movestr.substr (5,1);
+                       }
                        move(from,to, promo);
                        return;
                    }
@@ -104,8 +107,9 @@ void UI::listen(EReply c, string s){
                     ply.strDisplay += "+";
                 }
                 game.plies.push_back(ply);
-                
-                /* ============================================
+                game.fens.push_back(board->getFen(board));
+                /* ===========================================
+                 =
                  Next move
                  ============================================*/
                 if(board->sideToMove == WHITE){
@@ -189,6 +193,7 @@ void UI::listen(EReply c, string s){
                 s.erase(0, pos + delimiter.length());
             }
             
+          
             flipColor();
             if(board->sideToMove == WHITE){
                 board->halfmove++;
@@ -458,6 +463,9 @@ void UI::move(int from, int to, string promo){
     }else{
         board->rule50 = 0;
     }
+    
+    gamePos++;
+    
     // Check if King in check;
     vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
 }
@@ -505,7 +513,8 @@ Set UI::getSet(){
         game.result = "1-0";
         game.gameState = GAME_TIMEOUT;
     }
-    set.pngDescription = game.getDescription();
+    set.pngDescription = game.getDescription(gamePos);
+    
     for(int i=0;i<64;++i){
         set.s[i] = board->squares[i];
         set.toFields[i] = toFields[i] ;
@@ -516,6 +525,7 @@ Set UI::getSet(){
     set.gameState = board->gameState;
     set.lastTo = lastTo;
     set.lastFrom = lastFrom;
+    set.isAnalyse = isAnalyse;
     return set;
 }
 
@@ -525,34 +535,68 @@ Handing Commands from the UI  ==================================================
 void UI::exec(ECmd cmd, string s, int p){
     switch(cmd){
         case CMD_TOP:
+            gamePos = 0;
+            isAnalyse = true;
+            runClock = false;
+            board->setFEN(game.fens.at(gamePos));
             break;
             
         case CMD_BACK:
+            if(gamePos>0){
+                gamePos--;
+            }
+            isAnalyse = true;
+            runClock = false;
+            board->setFEN(game.fens.at(gamePos));
             break;
             
         case CMD_FORWARD:
+            if(gamePos < game.plies.size()){
+                gamePos++;
+            }
+            isAnalyse = true;
+            runClock = false;
+            board->setFEN(game.fens.at(gamePos));
             break;
             
         case CMD_STOP:
+            isAnalyse = true;
+            runClock = false;
             break;
             
         case CMD_END:
+            gamePos = game.plies.size();
+            isAnalyse = true;
+            runClock = false;
+            board->setFEN(game.fens.at(gamePos));
             break;
             
         case CMD_ANALYZE:
+            isAnalyse = !isAnalyse;
+            if(isAnalyse){
+                runClock = false;
+            }else{
+                runClock = true;
+            }
             break;
             
         case CMD_HINT:
             break;
             
         case CMD_SAVEPNG:
+        {
+            png.save(game, s);
             break;
+        }
             
         case CMD_LOADPNG:
+        {
+            game = png.load(s);
             break;
-            
+        }
         case CMD_START:
         {
+            isAnalyse = false;
             newGame();
             runClock = true;
             bool isBook = checkBookMove();
@@ -580,6 +624,7 @@ void UI::exec(ECmd cmd, string s, int p){
             break;
             
         case CMD_SETENGINEW:
+            
             if(engineName0 != s && s!= "Player"){
                 engine0->init(config.engineRoot + s);
             }
@@ -687,6 +732,7 @@ void UI::exec(ECmd cmd, string s, int p){
                 vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
             }
             break;
+            
         case CMD_SETBW:
             if(board->gameState == GAME_PROMOTION){
                 board->squares[ply.to] = W_BISHOP;
@@ -696,12 +742,16 @@ void UI::exec(ECmd cmd, string s, int p){
                 vEngine->getLegalMoves(board->getFen(board),ES_CHECK);
             }
             break;
+            
         case CMD_SETKW:
             break;
+            
         case CMD_SETKB:
             break;
+            
         case CMD_SETPW:
             break;
+            
         case CMD_SETPB:
             break;
     }
@@ -712,11 +762,14 @@ void UI::exec(ECmd cmd, string s, int p){
  */
 void UI::newGame(){
     runClock = false;
+    gamePos = 0;
     
     // TODO add differet Time Sets
     timeWMsec = 3000;
     timeBMsec = 3000;
     board->setFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    game.fens.clear();
+    game.fens.push_back("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     board->castelingRights = 15;
     for(int i=0;i<64;++i){
         toFields[i] = -1;
@@ -725,4 +778,5 @@ void UI::newGame(){
     game.gameState = GAME_NONE;
     game.plies.clear();
     lastTo = -1;
+    isAnalyse = false;
 }

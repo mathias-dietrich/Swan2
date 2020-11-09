@@ -25,8 +25,9 @@ public:
     string result = "";
     
     vector<Ply> plies;
+    vector<string> fens;
     
-    string getDescription(){
+    string getDescription(int max){
         string sum = event + "\n";
         sum += site + "\n";
         sum += date + "\n";
@@ -36,7 +37,11 @@ public:
         sum += result + "\n";
         int pos = 1;
         bool flip = true;
-        for (unsigned int i=0; i<plies.size(); i++) {
+        int maxPos = plies.size();
+        if(max < maxPos){
+            maxPos = max;
+        }
+        for (unsigned int i=0; i < maxPos; i++) {
             if(flip){
                 sum += to_string(pos) + ".";
                 ++pos;

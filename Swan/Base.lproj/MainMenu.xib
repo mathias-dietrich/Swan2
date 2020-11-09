@@ -853,6 +853,7 @@
                         <rect key="frame" x="12" y="10" width="800" height="800"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <connections>
+                            <outlet property="btnAnalyse" destination="1Gh-lN-3vC" id="jRY-y5-LZX"/>
                             <outlet property="btnBishopB" destination="s2N-Wv-DM0" id="h3E-iQ-b18"/>
                             <outlet property="btnBishopW" destination="0pc-DL-htT" id="orG-2h-NQo"/>
                             <outlet property="btnKingB" destination="NR9-YX-ySf" id="bIp-sF-pSJ"/>

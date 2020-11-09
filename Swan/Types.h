@@ -94,6 +94,7 @@ struct Set{
     string timeW = "3:34";
     string timeB = "5:00";
     bool whiteToMove;
+    bool isAnalyse;
     string fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1";
     GameState gameState;
     string pngDescription;
